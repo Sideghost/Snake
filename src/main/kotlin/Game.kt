@@ -1,0 +1,1 @@
+data class Game(val x:Int)
