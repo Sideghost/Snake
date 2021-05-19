@@ -10,15 +10,14 @@ data class Game(val snake: Snake, val wall: List<Position>)
 fun main() {
     onStart {
         val cv = Canvas(CELL_SIDE * GRID_WIDTH, CELL_SIDE * GRID_HEIGHT, BLACK)
-        var game = Game(Snake(SnakePos(1, 0), SnakePos(0, 0), 0, null), emptyList())//createGame(game.snake)
+        var game = Game(Snake(Position(1, GRID_HEIGHT/2), Position(0, GRID_HEIGHT/2), Direction.RIGHT, false), emptyList())//createGame(game.snake)
         //cv.drawGrid()
         //cv.drawSnake(game.snake)
         cv.drawGame(game)
-        cv.onTimeProgress(250){
-            game = Game(Snake(),)
+//        cv.onTimeProgress(250){
+//            game = Game(Snake(),)
             //mov criar e passar para dentro
-            //tentar fazer uma var acc que
-        }
+
     }
     onFinish {
         println("2 done 1 to go!")
@@ -42,8 +41,8 @@ fun Canvas.drawGame(game: Game) {
 
 }
 
-fun createGame(s:Snake) :Game {
-    val snakeInitPos = Snake(SnakePos(1,GRID_HEIGHT/2),SnakePos(0,GRID_HEIGHT/2),0,Direction.RIGHT)
-    return Game(snakeInitPos,createRandomBricks(snakeInitPos))
-}
-fun createRandomBricks(s:Snake) = (ALL_POSITIONS - s.HeadPos - s.TailPos).shuffled().map { ALL_POSITIONS.itsValid(ALL_POSITIONS)/*Snake(it,it,0,null)*/}
+//fun createGame(s:Snake) :Game {
+//    val snakeInitPos = Snake(SnakePos(1,GRID_HEIGHT/2),SnakePos(0,GRID_HEIGHT/2),0,Direction.RIGHT)
+//    return Game(snakeInitPos,createRandomBricks(snakeInitPos))
+//}
+//fun createRandomBricks(s:Snake) = (ALL_POSITIONS - s.HeadPos - s.TailPos).shuffled().map { ALL_POSITIONS.itsValid(ALL_POSITIONS)/*Snake(it,it,0,null)*/}
