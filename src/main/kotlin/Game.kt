@@ -10,10 +10,15 @@ data class Game(val snake: Snake, val wall: List<Position>)
 fun main() {
     onStart {
         val cv = Canvas(CELL_SIDE * GRID_WIDTH, CELL_SIDE * GRID_HEIGHT, BLACK)
-        var game = Game(Snake(Position(1, GRID_HEIGHT/2), Position(0, GRID_HEIGHT/2), Direction.RIGHT, false), emptyList())//createGame(game.snake)
+        var game = Game(Snake(Position(1, GRID_HEIGHT/2), Position(0, GRID_HEIGHT/2), Direction.RIGHT, true), emptyList())//createGame(game.snake)
+
+        cv.onTimeProgress(250){
+            game = Game(snakeMove(game.snake,it), game.wall)
+            cv.drawGame(game)
+        }
+
         //cv.drawGrid()
         //cv.drawSnake(game.snake)
-        cv.drawGame(game)
 //        cv.onTimeProgress(250){
 //            game = Game(Snake(),)
             //mov criar e passar para dentro

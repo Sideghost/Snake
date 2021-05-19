@@ -6,6 +6,12 @@ enum class Direction(val dx:Int, val dy:Int) {
     LEFT(-1,0), UP(0,-1), RIGHT(1,0), DOWN(0,1)
 }
 
+operator fun Position.plus( dir:Direction ) = Position( x + dir.dx(), y + dir.dy() )
+
+fun Position.itsValid(xSize:Int, ySize:Int) = x in 0 until xSize && y in 0 until ySize
+
+
+
 fun Direction?.dx() = this?.dx ?: 0
 
 fun Direction?.dy() = this?.dy ?: 0
