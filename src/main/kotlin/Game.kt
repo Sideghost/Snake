@@ -11,17 +11,15 @@ fun main() {
     onStart {
         val cv = Canvas(CELL_SIDE * GRID_WIDTH, CELL_SIDE * GRID_HEIGHT, BLACK)
         var game = Game(Snake(Position(1, GRID_HEIGHT/2), Position(0, GRID_HEIGHT/2), Direction.RIGHT, true), emptyList())//createGame(game.snake)
-
+        cv.drawGame(game)
+        cv.onKeyPressed { ke :KeyEvent ->
+            game = Game(snakeDirection(ke.code ,game.snake), game.wall)
+        }
+        // se ficar a precionar na tecla ela avança mais depreça
         cv.onTimeProgress(250){
-            game = Game(snakeMove(game.snake,it), game.wall)
+            game = Game(snakeMove(it.toInt() ,game.snake), game.wall)
             cv.drawGame(game)
         }
-
-        //cv.drawGrid()
-        //cv.drawSnake(game.snake)
-//        cv.onTimeProgress(250){
-//            game = Game(Snake(),)
-            //mov criar e passar para dentro
 
     }
     onFinish {
@@ -42,9 +40,13 @@ fun Canvas.drawGame(game: Game) {
     erase()
     drawGrid()
     drawSnake(game.snake)
-    game.wall.forEach { drawImage("bricks.png", it.x, it.y, CELL_SIDE, CELL_SIDE) }
-
+  //  game.wall.forEach { drawImage("bricks.png", it.x, it.y, CELL_SIDE, CELL_SIDE) }
 }
+
+
+
+
+
 
 //fun createGame(s:Snake) :Game {
 //    val snakeInitPos = Snake(SnakePos(1,GRID_HEIGHT/2),SnakePos(0,GRID_HEIGHT/2),0,Direction.RIGHT)
