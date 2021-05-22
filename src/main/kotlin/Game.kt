@@ -15,7 +15,7 @@ fun main() {
         cv.onKeyPressed { ke :KeyEvent ->
             game = Game(snakeDirection(ke.code ,game.snake), game.wall)
         }
-        // se ficar a precionar na tecla ela avança mais depreça
+
         cv.onTimeProgress(250){
             game = Game(snakeMove(it.toInt() ,game.snake), game.wall)
             cv.drawGame(game)
