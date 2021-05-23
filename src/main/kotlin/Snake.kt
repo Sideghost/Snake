@@ -31,26 +31,30 @@ fun Canvas.drawSnake(s: Snake) {
     drawImage("snake.png|$txImg,$tyImg,$SPRITE_DIV,$SPRITE_DIV", tx, ty, CELL_SIDE, CELL_SIDE)
 }
 
-fun snakeDirection(key:Int ,s: Snake): Snake {
+fun snakeDirection(key: Int, s: Snake): Snake {
     val dir = directionOf(key, s)
-        return when (key){
-        LEFT_CODE -> Snake(Position(s.HeadPos.x , s.HeadPos.y),Position(s.HeadPos.x, s.HeadPos.y),dir,s.run)
-        RIGHT_CODE -> Snake(Position(s.HeadPos.x, s.HeadPos.y),Position(s.HeadPos.x, s.HeadPos.y),dir,s.run)
-        DOWN_CODE -> Snake(Position(s.HeadPos.x, s.HeadPos.y ),Position(s.HeadPos.x, s.HeadPos.y),dir,s.run)
-        UP_CODE -> Snake(Position(s.HeadPos.x, s.HeadPos.y),Position(s.HeadPos.x, s.HeadPos.y),dir,s.run)
+    return when (key) {
+        LEFT_CODE -> Snake(Position(s.HeadPos.x, s.HeadPos.y), Position(s.HeadPos.x, s.HeadPos.y), dir, s.run)
+        RIGHT_CODE -> Snake(Position(s.HeadPos.x, s.HeadPos.y), Position(s.HeadPos.x, s.HeadPos.y), dir, s.run)
+        DOWN_CODE -> Snake(Position(s.HeadPos.x, s.HeadPos.y), Position(s.HeadPos.x, s.HeadPos.y), dir, s.run)
+        UP_CODE -> Snake(Position(s.HeadPos.x, s.HeadPos.y), Position(s.HeadPos.x, s.HeadPos.y), dir, s.run)
         else -> s
     }
 }
 
-//a função de move faz com que a cobrinha se mova imediatamente assim que se muda a direção,
-// logo para ela nao saltar um quadrado temos de compensar no modo como ela se comporta na de cima
-// nao perguntes o pq de nao se alterar nada em cima que eu n quero pensar agora nisto ja me esta a dar demasiada dor
-// de cabeça como ja esta n quero mais!!
-// NOTA ADICIONAL: PENSO QUE TEM MESMO DE SER ASSIM!!
-fun snakeMove(key:Int ,s: Snake): Snake {
+fun snakeMove(key: Int, s: Snake): Snake {
     val dir = directionOf(key, s)
-    val snakePosition = s.HeadPos + dir
+    val headToPosition = s.HeadPos + dir
     val tailPosition = s.HeadPos
-    return if (snakePosition.itsValid(GRID_WIDTH,GRID_HEIGHT) && s.run) Snake(snakePosition, tailPosition, s.motion, s.run)
+
+    return if (s.run) {
+        when {
+            headToPosition.x < 0 -> Snake(Position(GRID_WIDTH - 1, headToPosition.y), tailPosition, s.motion, s.run)
+            headToPosition.x > GRID_WIDTH - 1 -> Snake(Position(0, headToPosition.y), tailPosition, s.motion, s.run)
+            headToPosition.y < 0 -> Snake(Position(headToPosition.x, GRID_HEIGHT - 1), tailPosition, s.motion, s.run)
+            headToPosition.y > GRID_HEIGHT - 1 -> Snake(Position(headToPosition.x, 0), tailPosition, s.motion, s.run)
+            else -> Snake(headToPosition, tailPosition, s.motion, s.run)
+        }
+    }
     else s
 }

@@ -22,15 +22,10 @@ fun directionOf( key:Int, snake: Snake ) :Direction = when (key) {
     else -> snake.motion
 }
 
-
-
-
 fun Canvas.drawBricks(p :Position) {
     val x = p.x * CELL_SIDE
     val y = p.y * CELL_SIDE
     drawImage("bricks.png",x,y,CELL_SIDE,CELL_SIDE)
 }
-
-
 
 val ALL_POSITIONS :List<Position>  = (0 until GRID_HEIGHT*GRID_WIDTH).map { Position( it%GRID_WIDTH, it/GRID_WIDTH ) }
