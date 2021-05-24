@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="de493718-30fd-49f4-abce-cb1ff520ac19" name="Default Changelist" comment="AMEN JESUS &lt;3">
+    <list default="true" id="de493718-30fd-49f4-abce-cb1ff520ac19" name="Default Changelist" comment="next key falta fazer">
       <change beforePath="$PROJECT_DIR$/.gradle/6.8/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.8/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.8/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8/fileHashes/fileHashes.bin" afterDir="false" />
@@ -49,6 +49,7 @@
       <change beforePath="$PROJECT_DIR$/build/kotlin/compileKotlin/caches-jvm/lookups/lookups.tab_i" beforeDir="false" afterPath="$PROJECT_DIR$/build/kotlin/compileKotlin/caches-jvm/lookups/lookups.tab_i" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/kotlin/compileKotlin/last-build.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/kotlin/compileKotlin/last-build.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Game.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Game.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Position.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Position.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Snake.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Snake.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,7 +94,7 @@
       <recent name="C:\ISEL\Pg\Intellij IDEA\TP02\src\main\kotlin" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.GameKt">
+  <component name="RunManager" selected="Kotlin.GameKt">
     <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -108,34 +109,22 @@
       </method>
     </configuration>
     <configuration name="GameKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <module name="Snake.main" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
       <option name="MAIN_CLASS_NAME" value="GameKt" />
-      <option name="WORKING_DIRECTORY" />
+      <module name="Snake.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration name="SnakeKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <module name="Snake.main" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
       <option name="MAIN_CLASS_NAME" value="SnakeKt" />
-      <option name="WORKING_DIRECTORY" />
+      <module name="Snake.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.GameKt" />
+        <item itemvalue="Kotlin.GameKt" />
       </list>
     </recent_temporary>
   </component>

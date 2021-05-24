@@ -28,26 +28,34 @@ fun Canvas.drawSnake(s: Snake) {
 }
 
 
-fun snakeDirection(key: Int, s: Snake, g:Game): Snake {
+fun snakeDirection(key: Int, g: Game): Snake {
     val headToPosition = g.snake.HeadPos + directionOf(key, g.snake)
     val tailPosition = g.snake.TailPos
     return if (key in listOf(LEFT_CODE, RIGHT_CODE, DOWN_CODE, UP_CODE) && headToPosition != tailPosition)
-        Snake(Position(s.HeadPos.x, s.HeadPos.y), Position(s.HeadPos.x, s.HeadPos.y), directionOf(key, s), s.run)
-    else s
+        Snake(
+            Position(g.snake.HeadPos.x, g.snake.HeadPos.y),
+            Position(g.snake.HeadPos.x, g.snake.HeadPos.y),
+            directionOf(key, g.snake),
+            g.snake.run
+        )
+    else g.snake
 }
 
 
-fun move(key: Int,g: Game):Game {
+fun move(key: Int, g: Game): Game {
     val headToPosition = g.snake.HeadPos + directionOf(key, g.snake)
     val tailToPosition = g.snake.HeadPos
-    if ( g.wall.any{it==headToPosition} ) return g
-    return if (g.snake.run){ Game(Snake(
-        when {
-            headToPosition.x < 0                -> Position(GRID_WIDTH - 1, headToPosition.y)
-            headToPosition.x > GRID_WIDTH - 1   -> Position(0, headToPosition.y)
-            headToPosition.y < 0                -> Position(headToPosition.x, GRID_HEIGHT - 1)
-            headToPosition.y > GRID_HEIGHT - 1  -> Position(headToPosition.x, 0)
-            else -> headToPosition
-        }, tailToPosition, g.snake.motion, g.snake.run),g.wall)
-    } else g
+    if (g.snake.run) {
+        val topos =
+            when {
+                headToPosition.x < 0 -> Position(GRID_WIDTH - 1, headToPosition.y)
+                headToPosition.x > GRID_WIDTH - 1 -> Position(0, headToPosition.y)
+                headToPosition.y < 0 -> Position(headToPosition.x, GRID_HEIGHT - 1)
+                headToPosition.y > GRID_HEIGHT - 1 -> Position(headToPosition.x, 0)
+                else -> headToPosition
+            }
+        if (g.wall.any { it == topos }) {
+            println("colide"); return g}
+            else return Game(Snake(topos,tailToPosition,g.snake.motion,g.snake.run),g.wall)
+    } else return g
 }
