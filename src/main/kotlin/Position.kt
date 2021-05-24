@@ -31,7 +31,15 @@ fun directionOf( key:Int, snake: Snake ) :Direction = when (key) {
     DOWN_CODE   -> Direction.DOWN
     else        -> snake.motion
 }
-
+fun nextKey(key: Int,s:Snake){
+    when {
+        directionOf(key, s) == Direction.UP -> 1 //Right and Left
+        directionOf(key, s) == Direction.DOWN -> 2 // Right and left
+        directionOf(key, s) == Direction.RIGHT -> 3 // UP and DOWN
+        directionOf(key, s) == Direction.LEFT -> 4 // UP and DOWN
+        else -> s
+    }
+}
 
 fun Canvas.drawBrick(p :Position) {
     drawImage("bricks.png",p.x * CELL_SIDE,p.y * CELL_SIDE,CELL_SIDE,CELL_SIDE)

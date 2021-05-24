@@ -35,17 +35,17 @@ fun snakeDirection(key: Int, s: Snake): Snake {
 }
 
 
-fun snakeMove(key: Int, s: Snake): Snake {
-    val headToPosition = s.HeadPos + directionOf(key, s)
-    val tailPosition = s.HeadPos
-
-    return if (s.run){ Snake(
+fun move(key: Int,g: Game):Game {
+    val headToPosition = g.snake.HeadPos + directionOf(key, g.snake)
+    val tailPosition = g.snake.HeadPos
+    if ( g.wall.any{it==headToPosition}) return g
+    return if (g.snake.run){ Game(Snake(
         when {
             headToPosition.x < 0                -> Position(GRID_WIDTH - 1, headToPosition.y)
             headToPosition.x > GRID_WIDTH - 1   -> Position(0, headToPosition.y)
             headToPosition.y < 0                -> Position(headToPosition.x, GRID_HEIGHT - 1)
             headToPosition.y > GRID_HEIGHT - 1  -> Position(headToPosition.x, 0)
             else -> headToPosition
-        }, tailPosition, s.motion, s.run)
-    } else s
+        }, tailPosition, g.snake.motion, g.snake.run),g.wall)
+    } else g
 }

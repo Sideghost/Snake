@@ -17,7 +17,7 @@ fun main() {
             Snake(Position(1, GRID_HEIGHT/2), Position(0, GRID_HEIGHT/2), Direction.RIGHT, true),
             emptyList()
         )
-        //Game(Snake(Position(1, GRID_HEIGHT/2), Position(0, GRID_HEIGHT/2), Direction.RIGHT, false), emptyList())
+        //createGame()
         cv.drawGame(game)
         cv.onKeyPressed { ke :KeyEvent ->
             game = Game(snakeDirection(ke.code ,game.snake), game.wall)
@@ -28,7 +28,7 @@ fun main() {
         }
 
         cv.onTimeProgress(250){
-            game = Game(snakeMove(it.toInt() ,game.snake), game.wall)
+            game = move(it.toInt() ,game)
             cv.drawGame(game)
         }
 
@@ -45,12 +45,14 @@ fun Canvas.drawGame(game: Game) {
 
 }
 
+
 fun createGame() :Game {
     val snakeInitPos = Snake(Position(1,GRID_HEIGHT/2),Position(0,GRID_HEIGHT/2),Direction.RIGHT,true)
     return Game(snakeInitPos, emptyList())
 }
 
 
-fun createRandomBrick(g: Game) :List<Position> =
-    (ALL_POSITIONS - g.snake.HeadPos - g.snake.TailPos - g.wall).shuffled().take(1).map { Position(it.x, it.y) }
+fun createRandomBrick(g: Game) :List<Position> {
+    return (ALL_POSITIONS - g.snake.HeadPos - g.snake.TailPos - g.wall).shuffled().take(1).map { Position(it.x, it.y) }
+}
 
