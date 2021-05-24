@@ -1,5 +1,6 @@
 import pt.isel.canvas.*
 
+
 data class Snake(val HeadPos: Position, val TailPos: Position, val motion: Direction, val run: Boolean)
 
 
@@ -8,12 +9,7 @@ fun Canvas.drawSnake(s: Snake) {
     val hy = s.HeadPos.y * CELL_SIDE - s.motion.dy()
     val tx = s.TailPos.x * CELL_SIDE - s.motion.dx()
     val ty = s.TailPos.y * CELL_SIDE - s.motion.dy()
-    val hxImg = SPRITE_DIV * when (s.motion) {
-        Direction.LEFT, Direction.UP -> 3
-        Direction.RIGHT, Direction.DOWN -> 4
-    }
-
-    val txImg = SPRITE_DIV * when (s.motion) {
+    val sxImg = SPRITE_DIV * when (s.motion) {
         Direction.LEFT, Direction.UP -> 3
         Direction.RIGHT, Direction.DOWN -> 4
     }
@@ -27,9 +23,10 @@ fun Canvas.drawSnake(s: Snake) {
         Direction.LEFT, Direction.DOWN -> 3
         Direction.UP, Direction.RIGHT -> 2
     }
-    drawImage("snake.png|$hxImg,$hyImg,$SPRITE_DIV,$SPRITE_DIV", hx, hy, CELL_SIDE, CELL_SIDE)
-    drawImage("snake.png|$txImg,$tyImg,$SPRITE_DIV,$SPRITE_DIV", tx, ty, CELL_SIDE, CELL_SIDE)
+    drawImage("snake.png|$sxImg,$hyImg,$SPRITE_DIV,$SPRITE_DIV", hx, hy, CELL_SIDE, CELL_SIDE)
+    drawImage("snake.png|$sxImg,$tyImg,$SPRITE_DIV,$SPRITE_DIV", tx, ty, CELL_SIDE, CELL_SIDE)
 }
+
 
 fun snakeDirection(key: Int, s: Snake): Snake {
     val dir = directionOf(key, s)
@@ -41,6 +38,7 @@ fun snakeDirection(key: Int, s: Snake): Snake {
         else -> s
     }
 }
+
 
 fun snakeMove(key: Int, s: Snake): Snake {
     val dir = directionOf(key, s)
