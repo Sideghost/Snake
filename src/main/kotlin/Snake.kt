@@ -28,8 +28,10 @@ fun Canvas.drawSnake(s: Snake) {
 }
 
 
-fun snakeDirection(key: Int, s: Snake): Snake {
-    return if (key in listOf(LEFT_CODE, RIGHT_CODE, DOWN_CODE, UP_CODE))
+fun snakeDirection(key: Int, s: Snake, g:Game): Snake {
+    val headToPosition = g.snake.HeadPos + directionOf(key, g.snake)
+    val tailPosition = g.snake.TailPos
+    return if (key in listOf(LEFT_CODE, RIGHT_CODE, DOWN_CODE, UP_CODE) && headToPosition != tailPosition)
         Snake(Position(s.HeadPos.x, s.HeadPos.y), Position(s.HeadPos.x, s.HeadPos.y), directionOf(key, s), s.run)
     else s
 }
@@ -37,8 +39,8 @@ fun snakeDirection(key: Int, s: Snake): Snake {
 
 fun move(key: Int,g: Game):Game {
     val headToPosition = g.snake.HeadPos + directionOf(key, g.snake)
-    val tailPosition = g.snake.HeadPos
-    if ( g.wall.any{it==headToPosition}) return g
+    val tailToPosition = g.snake.HeadPos
+    if ( g.wall.any{it==headToPosition} ) return g
     return if (g.snake.run){ Game(Snake(
         when {
             headToPosition.x < 0                -> Position(GRID_WIDTH - 1, headToPosition.y)
@@ -46,6 +48,6 @@ fun move(key: Int,g: Game):Game {
             headToPosition.y < 0                -> Position(headToPosition.x, GRID_HEIGHT - 1)
             headToPosition.y > GRID_HEIGHT - 1  -> Position(headToPosition.x, 0)
             else -> headToPosition
-        }, tailPosition, g.snake.motion, g.snake.run),g.wall)
+        }, tailToPosition, g.snake.motion, g.snake.run),g.wall)
     } else g
 }

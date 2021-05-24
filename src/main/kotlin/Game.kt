@@ -20,7 +20,7 @@ fun main() {
         //createGame()
         cv.drawGame(game)
         cv.onKeyPressed { ke :KeyEvent ->
-            game = Game(snakeDirection(ke.code ,game.snake), game.wall)
+            game = Game(snakeDirection(ke.code ,game.snake, game), game.wall)
         }
 
         cv.onTimeProgress(BLOCK_SPAWN_TIMER){
