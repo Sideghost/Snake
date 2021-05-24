@@ -7,6 +7,7 @@ const val GRID_WIDTH = 20
 const val GRID_HEIGHT = 16
 const val SPRITE_DIV = 64
 const val BLOCK_SPAWN_TIMER = 5000
+const val QUART_OF_A_SEC = 250
 
 
 /**

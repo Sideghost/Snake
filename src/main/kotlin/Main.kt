@@ -21,7 +21,7 @@ fun main() {
             game = Game(game.snake,game.wall + createRandomBrick(game))
         }
 
-        cv.onTimeProgress(250){
+        cv.onTimeProgress(QUART_OF_A_SEC){
             game = move(it.toInt() ,game)
             cv.drawGame(game)
         }
