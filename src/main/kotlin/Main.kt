@@ -1,7 +1,8 @@
 import pt.isel.canvas.*
 
+
 /**
- * Main function responsible for the game implementation
+ * Main function responsible for the game implementation.
  */
 fun main() {
     onStart {

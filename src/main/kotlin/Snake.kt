@@ -1,49 +1,52 @@
 import pt.isel.canvas.*
 
 
-data class Snake(val HeadPos: Position, val TailPos: Position, val motion: Direction)
+/**
+ * Class that defines all the important proprieties of a Snake.
+ * @property HeadPos Position(x,y) of the head in the Snake.
+ * @property TailPos Position(x,y) of the tail in the Snake.
+ * @property direction Direction that the snake faces in the game.
+ */
+data class Snake(val HeadPos: Position, val TailPos: Position, val direction: Direction)
 
 
-fun Canvas.drawSnake(s: Snake) {
-    val hx = s.HeadPos.x * CELL_SIDE - s.motion.dx()
-    val hy = s.HeadPos.y * CELL_SIDE - s.motion.dy()
-    val tx = s.TailPos.x * CELL_SIDE - s.motion.dx()
-    val ty = s.TailPos.y * CELL_SIDE - s.motion.dy()
-    val sxImg = SPRITE_DIV * when (s.motion) {
+/**
+ * Function that draws the Snake in the canvas using a Sprite.
+ * @param snake object with movement in the game.
+ * @param pngFile input file that has the drawing of the snake.
+ */
+fun Canvas.drawSnake(snake: Snake, pngFile:String) {
+    val hx = snake.HeadPos.x * CELL_SIDE - snake.direction.dx()
+    val hy = snake.HeadPos.y * CELL_SIDE - snake.direction.dy()
+    val tx = snake.TailPos.x * CELL_SIDE - snake.direction.dx()
+    val ty = snake.TailPos.y * CELL_SIDE - snake.direction.dy()
+    val sxImg = SPRITE_DIV * when (snake.direction) {
         Direction.LEFT, Direction.UP -> 3
         Direction.RIGHT, Direction.DOWN -> 4
     }
 
-    val hyImg = SPRITE_DIV * when (s.motion) {
+    val hyImg = SPRITE_DIV * when (snake.direction) {
         Direction.LEFT, Direction.DOWN -> 1
         Direction.UP, Direction.RIGHT -> 0
     }
 
-    val tyImg = SPRITE_DIV * when (s.motion) {
+    val tyImg = SPRITE_DIV * when (snake.direction) {
         Direction.LEFT, Direction.DOWN -> 3
         Direction.UP, Direction.RIGHT -> 2
     }
-    drawImage("snake.png|$sxImg,$hyImg,$SPRITE_DIV,$SPRITE_DIV", hx, hy, CELL_SIDE, CELL_SIDE)
-    drawImage("snake.png|$sxImg,$tyImg,$SPRITE_DIV,$SPRITE_DIV", tx, ty, CELL_SIDE, CELL_SIDE)
+    drawImage("$pngFile|$sxImg,$hyImg,$SPRITE_DIV,$SPRITE_DIV", hx, hy, CELL_SIDE, CELL_SIDE)
+    drawImage("$pngFile|$sxImg,$tyImg,$SPRITE_DIV,$SPRITE_DIV", tx, ty, CELL_SIDE, CELL_SIDE)
 }
 
 
-fun Snake.headToPosition (key: Int) = HeadPos + directionOf(key, this)
-
-
-fun hasCollision (pos: Position, wall: List<Position>) = wall.any{ it == pos}
-
-
-fun snakeDirection(key: Int, g: Game): Snake {
-    val headToPosition = g.snake.headToPosition(key)
-
-    return if (g.wall.any { it == headToPosition } || headToPosition == g.snake.TailPos) g.snake
-    else Snake(g.snake.HeadPos, g.snake.TailPos, directionOf(key, g.snake))
-}
-
-
-fun move(key: Int, g: Game): Game {
-    val headToPosition = g.snake.headToPosition(key)
+/**
+ * Function that moves the Snake.
+ * @param key code of arrow input.
+ * @param game current state of the Game to be affected by possible changes.
+ * @return updated Game pass by snake.
+ */
+fun move(key: Int, game: Game): Game {
+    val headToPosition = game.snake.headToPosition(key)
     val toPos =
         when {
             headToPosition.x < 0                -> Position(GRID_WIDTH - 1, headToPosition.y)
@@ -52,6 +55,6 @@ fun move(key: Int, g: Game): Game {
             headToPosition.y > GRID_HEIGHT - 1  -> Position(headToPosition.x, 0)
             else -> headToPosition
         }
-    return if (hasCollision(toPos, g.wall)) g
-    else Game(Snake(toPos, g.snake.HeadPos, g.snake.motion), g.wall)
+    return if (hasCollision(toPos, game.wall)) game
+    else Game(Snake(toPos, game.snake.HeadPos, game.snake.direction), game.wall)
 }

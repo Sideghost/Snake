@@ -1,6 +1,7 @@
 import pt.isel.canvas.*
 
-// Game constants
+
+// Game constants.
 const val CELL_SIDE = 32
 const val GRID_WIDTH = 20
 const val GRID_HEIGHT = 16
@@ -10,22 +11,28 @@ const val BLOCK_SPAWN_TIMER = 5000
 
 /**
  * Class that defines the whole game.
- * @property snake
- * @property wall
+ * @property snake object with movement in the game.
+ * @property wall obstacles that stop movement of the [snake].
  */
 data class Game(val snake: Snake, val wall: List<Position>)
 
 
 /**
- *
+ * Draws the whole game.
+ * @param game collection of [wall] && [snake].
  */
 fun Canvas.drawGame(game: Game) {
     erase()
-    drawSnake(game.snake)
-    game.wall.forEach{drawBrick(it)}
-
+    drawSnake(game.snake,"snake.png")
+    game.wall.forEach{drawBrick(it,"bricks.png")}
 }
 
 
-fun createRandomBrick(g: Game) :List<Position> =
-    (ALL_POSITIONS - g.snake.HeadPos - g.snake.TailPos - g.wall).shuffled().take(1).map { Position(it.x, it.y) }
+/**
+ * Function that draws a brick from the pngFile.
+ * @param position position of each individual brick.
+ * @param pngFile input file that has the drawing of the snake.
+ */
+fun Canvas.drawBrick(position :Position, pngFile:String) {
+    drawImage(pngFile,position.x * CELL_SIDE,position.y * CELL_SIDE,CELL_SIDE,CELL_SIDE)
+}
