@@ -5,7 +5,10 @@ data class Position(val x:Int,val y:Int)
 
 
 enum class Direction(val dx:Int, val dy:Int) {
-    LEFT(-1,0), UP(0,-1), RIGHT(+1,0), DOWN(0,+1)
+    LEFT(-1,0),
+    UP(0,-1),
+    RIGHT(+1,0),
+    DOWN(0,+1)
 }
 
 
@@ -22,19 +25,17 @@ fun Direction.dy() = this.dy
 
 
 fun directionOf( key:Int, snake: Snake ) :Direction = when (key) {
-    LEFT_CODE -> Direction.LEFT
-    RIGHT_CODE -> Direction.RIGHT
-    UP_CODE -> Direction.UP
-    DOWN_CODE -> Direction.DOWN
-    else -> snake.motion
+    LEFT_CODE   -> Direction.LEFT
+    RIGHT_CODE  -> Direction.RIGHT
+    UP_CODE     -> Direction.UP
+    DOWN_CODE   -> Direction.DOWN
+    else        -> snake.motion
 }
 
 
 fun Canvas.drawBrick(p :Position) {
-    val x = p.x * CELL_SIDE
-    val y = p.y * CELL_SIDE
-    drawImage("bricks.png",x,y,CELL_SIDE,CELL_SIDE)
+    drawImage("bricks.png",p.x * CELL_SIDE,p.y * CELL_SIDE,CELL_SIDE,CELL_SIDE)
 }
 
 
-val ALL_POSITIONS :List<Position>  = (0 until GRID_HEIGHT*GRID_WIDTH).map { Position( it%GRID_WIDTH, it/GRID_WIDTH ) }
+val ALL_POSITIONS :List<Position>  = (0 until GRID_HEIGHT*GRID_WIDTH).map{Position(it%GRID_WIDTH, it/GRID_WIDTH)}

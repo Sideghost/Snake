@@ -29,30 +29,23 @@ fun Canvas.drawSnake(s: Snake) {
 
 
 fun snakeDirection(key: Int, s: Snake): Snake {
-    val dir = directionOf(key, s)
-    return when (key) {
-        LEFT_CODE -> Snake(Position(s.HeadPos.x, s.HeadPos.y), Position(s.HeadPos.x, s.HeadPos.y), dir, s.run)
-        RIGHT_CODE -> Snake(Position(s.HeadPos.x, s.HeadPos.y), Position(s.HeadPos.x, s.HeadPos.y), dir, s.run)
-        DOWN_CODE -> Snake(Position(s.HeadPos.x, s.HeadPos.y), Position(s.HeadPos.x, s.HeadPos.y), dir, s.run)
-        UP_CODE -> Snake(Position(s.HeadPos.x, s.HeadPos.y), Position(s.HeadPos.x, s.HeadPos.y), dir, s.run)
-        else -> s
-    }
+    return if (key in listOf(LEFT_CODE, RIGHT_CODE, DOWN_CODE, UP_CODE))
+        Snake(Position(s.HeadPos.x, s.HeadPos.y), Position(s.HeadPos.x, s.HeadPos.y), directionOf(key, s), s.run)
+    else s
 }
 
 
 fun snakeMove(key: Int, s: Snake): Snake {
-    val dir = directionOf(key, s)
-    val headToPosition = s.HeadPos + dir
+    val headToPosition = s.HeadPos + directionOf(key, s)
     val tailPosition = s.HeadPos
 
-    return if (s.run) {
+    return if (s.run){ Snake(
         when {
-            headToPosition.x < 0 -> Snake(Position(GRID_WIDTH - 1, headToPosition.y), tailPosition, s.motion, s.run)
-            headToPosition.x > GRID_WIDTH - 1 -> Snake(Position(0, headToPosition.y), tailPosition, s.motion, s.run)
-            headToPosition.y < 0 -> Snake(Position(headToPosition.x, GRID_HEIGHT - 1), tailPosition, s.motion, s.run)
-            headToPosition.y > GRID_HEIGHT - 1 -> Snake(Position(headToPosition.x, 0), tailPosition, s.motion, s.run)
-            else -> Snake(headToPosition, tailPosition, s.motion, s.run)
-        }
-    }
-    else s
+            headToPosition.x < 0                -> Position(GRID_WIDTH - 1, headToPosition.y)
+            headToPosition.x > GRID_WIDTH - 1   -> Position(0, headToPosition.y)
+            headToPosition.y < 0                -> Position(headToPosition.x, GRID_HEIGHT - 1)
+            headToPosition.y > GRID_HEIGHT - 1  -> Position(headToPosition.x, 0)
+            else -> headToPosition
+        }, tailPosition, s.motion, s.run)
+    } else s
 }
