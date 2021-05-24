@@ -1,7 +1,7 @@
 import pt.isel.canvas.*
 
 
-data class Snake(val HeadPos: Position, val TailPos: Position, val motion: Direction, val run: Boolean)
+data class Snake(val HeadPos: Position, val TailPos: Position, val motion: Direction)
 
 
 fun Canvas.drawSnake(s: Snake) {
@@ -28,34 +28,30 @@ fun Canvas.drawSnake(s: Snake) {
 }
 
 
+fun Snake.headToPosition (key: Int) = HeadPos + directionOf(key, this)
+
+
+fun hasCollision (pos: Position, wall: List<Position>) = wall.any{ it == pos}
+
+
 fun snakeDirection(key: Int, g: Game): Snake {
-    val headToPosition = g.snake.HeadPos + directionOf(key, g.snake)
-    val tailPosition = g.snake.TailPos
-    return if (key in listOf(LEFT_CODE, RIGHT_CODE, DOWN_CODE, UP_CODE) && headToPosition != tailPosition)
-        Snake(
-            Position(g.snake.HeadPos.x, g.snake.HeadPos.y),
-            Position(g.snake.HeadPos.x, g.snake.HeadPos.y),
-            directionOf(key, g.snake),
-            g.snake.run
-        )
-    else g.snake
+    val headToPosition = g.snake.headToPosition(key)
+
+    return if (g.wall.any { it == headToPosition } || headToPosition == g.snake.TailPos) g.snake
+    else Snake(g.snake.HeadPos, g.snake.TailPos, directionOf(key, g.snake))
 }
 
 
 fun move(key: Int, g: Game): Game {
-    val headToPosition = g.snake.HeadPos + directionOf(key, g.snake)
-    val tailToPosition = g.snake.HeadPos
-    if (g.snake.run) {
-        val topos =
-            when {
-                headToPosition.x < 0 -> Position(GRID_WIDTH - 1, headToPosition.y)
-                headToPosition.x > GRID_WIDTH - 1 -> Position(0, headToPosition.y)
-                headToPosition.y < 0 -> Position(headToPosition.x, GRID_HEIGHT - 1)
-                headToPosition.y > GRID_HEIGHT - 1 -> Position(headToPosition.x, 0)
-                else -> headToPosition
-            }
-        if (g.wall.any { it == topos }) {
-            println("colide"); return g}
-            else return Game(Snake(topos,tailToPosition,g.snake.motion,g.snake.run),g.wall)
-    } else return g
+    val headToPosition = g.snake.headToPosition(key)
+    val toPos =
+        when {
+            headToPosition.x < 0                -> Position(GRID_WIDTH - 1, headToPosition.y)
+            headToPosition.x > GRID_WIDTH - 1   -> Position(0, headToPosition.y)
+            headToPosition.y < 0                -> Position(headToPosition.x, GRID_HEIGHT - 1)
+            headToPosition.y > GRID_HEIGHT - 1  -> Position(headToPosition.x, 0)
+            else -> headToPosition
+        }
+    return if (hasCollision(toPos, g.wall)) g
+    else Game(Snake(toPos, g.snake.HeadPos, g.snake.motion), g.wall)
 }
