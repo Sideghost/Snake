@@ -7,19 +7,19 @@ import pt.isel.canvas.*
  * @property TailPos Position(x,y) of the tail in the Snake.
  * @property direction Direction that the snake faces in the game.
  */
-data class Snake(val HeadPos: Position, val TailPos: Position, val direction: Direction)
-
+//data class Snake(val HeadPos: Position, val TailPos: Position, val direction: Direction)
+data class Snake(val body: List<Position>, val direction: Direction, val run: Boolean = true, val toGrow: Int)
 
 /**
  * Function that draws the Snake in the canvas using a Sprite.
  * @param snake object with movement in the game.
  * @param pngFile input file that has the drawing of the snake.
  */
-fun Canvas.drawSnake(snake: Snake, pngFile:String) {
-    val hx = snake.HeadPos.x * CELL_SIDE - snake.direction.dx()
-    val hy = snake.HeadPos.y * CELL_SIDE - snake.direction.dy()
-    val tx = snake.TailPos.x * CELL_SIDE - snake.direction.dx()
-    val ty = snake.TailPos.y * CELL_SIDE - snake.direction.dy()
+fun Canvas.drawSnake(snake: Snake, pngFile: String) {
+    val hx = snake.body[0].x * CELL_SIDE - snake.direction.dx()
+    val hy = snake.body[0].y * CELL_SIDE - snake.direction.dy()
+    val tx = snake.body.last().x * CELL_SIDE - snake.direction.dx()
+    val ty = snake.body.last().y * CELL_SIDE - snake.direction.dy()
     val sxImg = SPRITE_DIV * when (snake.direction) {
         Direction.LEFT, Direction.UP -> 3
         Direction.RIGHT, Direction.DOWN -> 4
@@ -49,12 +49,21 @@ fun move(key: Int, game: Game): Game {
     val headToPosition = game.snake.headToPosition(key)
     val toPos =
         when {
-            headToPosition.x < 0                -> Position(GRID_WIDTH - 1, headToPosition.y)
-            headToPosition.x > GRID_WIDTH - 1   -> Position(0, headToPosition.y)
-            headToPosition.y < 0                -> Position(headToPosition.x, GRID_HEIGHT - 1)
-            headToPosition.y > GRID_HEIGHT - 1  -> Position(headToPosition.x, 0)
+            headToPosition.x < 0 -> Position(GRID_WIDTH - 1, headToPosition.y)
+            headToPosition.x > GRID_WIDTH - 1 -> Position(0, headToPosition.y)
+            headToPosition.y < 0 -> Position(headToPosition.x, GRID_HEIGHT - 1)
+            headToPosition.y > GRID_HEIGHT - 1 -> Position(headToPosition.x, 0)
             else -> headToPosition
         }
+    val teste = emptyList<Position>() + toPos
     return if (hasCollision(toPos, game.wall)) game
-    else Game(Snake(toPos, game.snake.HeadPos, game.snake.direction), game.wall)
+    else {
+        game.snake.body - game.snake.body[0]
+        Game(
+            Snake(teste + game.snake.body, game.snake.direction, game.snake.run, game.snake.toGrow),
+            game.wall,
+            game.apple,
+            game.score
+        )
+    }
 }

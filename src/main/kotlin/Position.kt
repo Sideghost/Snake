@@ -30,7 +30,7 @@ fun hasCollision (position: Position, wall: List<Position>) = wall.any{ it == po
  * @param key code of arrow input.
  * @return a new Position.
  */
-fun Snake.headToPosition (key: Int) = HeadPos + directionOf(key, this)
+fun Snake.headToPosition (key: Int) = body[0] + directionOf(key, this)
 
 
 // Verifies all possible position inside of the arena
@@ -43,4 +43,4 @@ val ALL_POSITIONS :List<Position>  = (0 until GRID_HEIGHT*GRID_WIDTH).map{Positi
  * @return a list of a single Position to be given to a Brick.
  */
 fun createRandomBrick(game: Game) :List<Position> =
-    (ALL_POSITIONS - game.snake.HeadPos - game.snake.TailPos - game.wall).shuffled().take(1).map { Position(it.x, it.y) }
+    (ALL_POSITIONS - game.snake.body[0] - game.snake.body.last() - game.wall).shuffled().take(1).map { Position(it.x, it.y) }
