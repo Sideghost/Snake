@@ -7,8 +7,8 @@ const val INIT_TOGROW = 0
  */
 fun main() {
     onStart {
-        val cv = Canvas(CELL_SIDE * GRID_WIDTH, CELL_SIDE * GRID_HEIGHT, BLACK)
-        var game = Game(Snake(listOf(Position(GRID_WIDTH/2,GRID_HEIGHT/2)), Direction.RIGHT,toGrow = INIT_TOGROW), emptyList(),null,INIT_SCORE)
+        val cv = Canvas(CELL_SIDE * GRID_WIDTH, CELL_SIDE * GRID_HEIGHT + STATUS_BAR, BLACK)
+        var game = Game(Snake(listOf(Position(GRID_WIDTH/2,GRID_HEIGHT/2)), Direction.RIGHT,toGrow = INIT_TOGROW), initBlocks(),null,INIT_SCORE)
 
         cv.drawGame(game)
         cv.onKeyPressed { ke: KeyEvent ->

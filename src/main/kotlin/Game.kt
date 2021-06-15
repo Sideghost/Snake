@@ -8,6 +8,7 @@ const val GRID_HEIGHT = 16
 const val SPRITE_DIV = 64
 const val BLOCK_SPAWN_TIMER = 5000
 const val QUART_OF_A_SEC = 250
+const val STATUS_BAR = 40
 
 
 /**
@@ -26,6 +27,7 @@ fun Canvas.drawGame(game: Game) {
     erase()
     drawSnake(game.snake, "snake.png")
     game.wall.forEach { drawBrick(it, "bricks.png") }
+    drawStatus(game)
     drawApple(game.apple,"snake.png")
 }
 
@@ -42,5 +44,10 @@ fun Canvas.drawBrick(position: Position, pngFile: String) {
 fun Canvas.drawApple(position: Position?, pngFile: String) {
     val xFile = 0
     val yFile = 3
-    drawImage("$pngFile|$xFile,$yFile,$SPRITE_DIV,$SPRITE_DIV",position?.x * CELL_SIDE,position?.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
+    if (position != null)
+    drawImage("$pngFile|$xFile,$yFile,$SPRITE_DIV,$SPRITE_DIV",position.x * CELL_SIDE,position.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
+}
+
+fun Canvas.drawStatus(g:Game) {
+    drawRect(0,height-STATUS_BAR,width,STATUS_BAR,0x555555)
 }
