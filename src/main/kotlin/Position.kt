@@ -47,18 +47,28 @@ fun createRandomBrick(game: Game): List<Position> =
     else
         (ALL_POSITIONS - game.snake.body - game.apple - game.wall).shuffled().take(1).map { Position(it.x, it.y) }
 
-fun createRandomApple(game: Game): Position =
-    (ALL_POSITIONS - game.snake.body - game.wall).shuffled().map { Position(it.x, it.y) }.random()
+
+fun Game.createRandomApple(): Position =
+    if (apple == null)
+            (ALL_POSITIONS - snake.body - wall).shuffled().map { Position(it.x, it.y) }.random()
+    else Position(apple.x, apple.y)
+
 
 fun initBlocks(): List<Position> {
-    val posInit = listOf<Position>(Position(0, 0), Position(1, 0), Position(2, 0),
+    val posInit = listOf<Position>(
+        Position(0, 0), Position(1, 0), Position(2, 0),
         Position(17, 0), Position(18, 0), Position(19, 0),
         Position(0, 15), Position(1, 15), Position(2, 15),
         Position(17, 15), Position(18, 15), Position(19, 15),
         Position(0, 1), Position(0, 2), Position(0, 3),
         Position(19, 1), Position(19, 2), Position(19, 3),
         Position(0, 12), Position(0, 13), Position(0, 14),
-        Position(19, 12), Position(19, 13), Position(19, 14))
+        Position(19, 12), Position(19, 13), Position(19, 14)
+    )
 
     return posInit
 }
+
+
+fun initApple(): Position =
+    (ALL_POSITIONS - Position(GRID_WIDTH/2,GRID_HEIGHT/2) - initBlocks()).shuffled().map { Position(it.x, it.y) }.random()

@@ -45,7 +45,7 @@ fun Canvas.drawApple(position: Position?, pngFile: String) {
     val xFile = 0
     val yFile = 3
     if (position != null)
-    drawImage("$pngFile|$xFile,$yFile,$SPRITE_DIV,$SPRITE_DIV",position.x * CELL_SIDE,position.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
+    drawImage("$pngFile|$xFile,$yFile,$SPRITE_DIV,$SPRITE_DIV", position.x * CELL_SIDE, position.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
 }
 
 fun Canvas.drawStatus(g:Game) {

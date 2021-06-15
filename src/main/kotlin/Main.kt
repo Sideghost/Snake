@@ -8,7 +8,7 @@ const val INIT_TOGROW = 0
 fun main() {
     onStart {
         val cv = Canvas(CELL_SIDE * GRID_WIDTH, CELL_SIDE * GRID_HEIGHT + STATUS_BAR, BLACK)
-        var game = Game(Snake(listOf(Position(GRID_WIDTH/2,GRID_HEIGHT/2)), Direction.RIGHT,toGrow = INIT_TOGROW), initBlocks(),null,INIT_SCORE)
+        var game = Game(Snake(listOf(Position(GRID_WIDTH/2,GRID_HEIGHT/2)), Direction.RIGHT,toGrow = INIT_TOGROW), initBlocks(), initApple(), INIT_SCORE)
 
         cv.drawGame(game)
         cv.onKeyPressed { ke: KeyEvent ->
@@ -21,6 +21,7 @@ fun main() {
 
         cv.onTimeProgress(QUART_OF_A_SEC) {
             game = move(it.toInt(), game)
+            game = Game(game.snake, game.wall ,game.createRandomApple() ,game.score)
             cv.drawGame(game)
         }
 
