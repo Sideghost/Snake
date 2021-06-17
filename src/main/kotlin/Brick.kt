@@ -23,3 +23,4 @@ fun initBlocks(): List<Position> {
 
     return posInit
 }
+

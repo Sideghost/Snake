@@ -16,3 +16,4 @@ fun Game.appleGetsEaten() =
     if (snake.body[0] == apple)
         Game(Snake(snake.body,snake.direction,snake.run,snake.toGrow + 5),wall,null, score + 1,status)
     else this
+
