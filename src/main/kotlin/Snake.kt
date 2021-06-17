@@ -16,7 +16,9 @@ data class Snake(val body: List<Position>, val direction: Direction, val run: Bo
  * @param game current state of the Game to be affected by possible changes.
  * @return updated Game pass by snake.
  */
-fun move(key: Int, game: Game): Game {
+fun move(key: Int, game: Game): Game{
+    //if(game.status != Status.RUN) return game
+    val cervicalC1 = game.snake.body[0]
     val headToPosition = game.snake.headToPosition(key)
     val toPos = emptyList<Position>() +
             when {
@@ -26,11 +28,13 @@ fun move(key: Int, game: Game): Game {
                 headToPosition.y > GRID_HEIGHT - 1 -> Position(headToPosition.x, 0)
                 else -> headToPosition
             }
-
-    return if (hasCollision(toPos[0], game.wall)) game
+//    if (game.snake.toGrow > 0) {
+//
+//    }
+    return if (hasCollision(toPos[0], game.wall) || game.status != Status.RUN) game
     else {
         Game(
-            Snake(toPos + game.snake.body.drop(1), game.snake.direction, game.snake.run, game.snake.toGrow),
+            Snake(toPos + cervicalC1 + game.snake.body.drop(1), game.snake.direction, game.snake.run, game.snake.toGrow),
             game.wall, game.apple, game.score, game.status)
     }
 }
