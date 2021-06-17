@@ -18,9 +18,6 @@ enum class Direction(val dx: Int, val dy: Int) {
 }
 
 
-//operator fun Position.minus( position:Position ) = Motion(x - position.x,y - position.y)
-
-
 /**
  * Util Functions.
  */
@@ -50,8 +47,8 @@ fun directionOf(key: Int, snake: Snake): Direction = when (key) {
  * @return Snake whit a new valid position or the old position.
  */
 fun snakeDirection(key: Int, game: Game): Snake {
-    val headToPosition = game.snake.headToPosition(key)
+    val headToPosition = game.snake.headToPosition(key).normalize()
 
-    return if (game.wall.any { it == headToPosition } || headToPosition == game.snake.body.last()) game.snake
+    return if (game.wall.any { it == headToPosition } || headToPosition in game.snake.body) game.snake
     else Snake(game.snake.body, directionOf(key, game.snake), game.snake.run, game.snake.toGrow)
 }

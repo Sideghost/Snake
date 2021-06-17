@@ -27,39 +27,37 @@ fun Canvas.drawSnake(snake: Snake, pngFile: String) {
     }
 
 
-
-
     drawImage("$pngFile|$hxImg,$hyImg,$SPRITE_DIV,$SPRITE_DIV", bx[0], by[0], CELL_SIDE, CELL_SIDE)// head
     if (snake.body.size > 1)
         drawImage("$pngFile|$hxImg,$tyImg,$SPRITE_DIV,$SPRITE_DIV", bx.last(), by.last(), CELL_SIDE, CELL_SIDE)// tail
 
 
-    if(snake.body.size > 2 )
-    (snake.body.subList(1,snake.body.size-2)).forEach {
-
-        val bxImag = SPRITE_DIV * when ((snake.body[it.x] - snake.body[it.x-1]).toDirection()) {
-            Direction.LEFT, Direction.RIGHT -> 1
-            Direction.DOWN, Direction.UP -> 2
-        }
-
-        val byImg = SPRITE_DIV * when ((snake.body[it.y] - snake.body[it.y-1]).toDirection()) {
-            Direction.UP, Direction.DOWN -> 1
-            Direction.RIGHT, Direction.LEFT -> 0
-        }
-
-        val xImg = SPRITE_DIV * when ((snake.body[it.x] - snake.body[it.x-1]).toDirection()) {
-            Direction.LEFT, Direction.DOWN -> 2
-            Direction.RIGHT, Direction.UP -> 0
-        }
-
-        val yImg = SPRITE_DIV * when ((snake.body[it.y] - snake.body[it.y-1]).toDirection()) {
-            Direction.UP -> 1
-            Direction.DOWN, Direction.RIGHT -> 0
-            Direction.LEFT -> 2
-        }
-
-        drawImage("$pngFile|$xImg,$yImg,$SPRITE_DIV,$SPRITE_DIV", it.x * CELL_SIDE, it.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
-    }
+//    if(snake.body.size > 2 )
+//    (snake.body.subList(1,snake.body.size-2)).forEach {
+//
+//        val bxImag = SPRITE_DIV * when ((snake.body[it.x] - snake.body[it.x-1]).toDirection()) {
+//            Direction.LEFT, Direction.RIGHT -> 1
+//            Direction.DOWN, Direction.UP -> 2
+//        }
+//
+//        val byImg = SPRITE_DIV * when ((snake.body[it.y] - snake.body[it.y-1]).toDirection()) {
+//            Direction.UP, Direction.DOWN -> 1
+//            Direction.RIGHT, Direction.LEFT -> 0
+//        }
+//
+//        val xImg = SPRITE_DIV * when ((snake.body[it.x] - snake.body[it.x-1]).toDirection()) {
+//            Direction.LEFT, Direction.DOWN -> 2
+//            Direction.RIGHT, Direction.UP -> 0
+//        }
+//
+//        val yImg = SPRITE_DIV * when ((snake.body[it.y] - snake.body[it.y-1]).toDirection()) {
+//            Direction.UP -> 1
+//            Direction.DOWN, Direction.RIGHT -> 0
+//            Direction.LEFT -> 2
+//        }
+//
+//        drawImage("$pngFile|$xImg,$yImg,$SPRITE_DIV,$SPRITE_DIV", it.x * CELL_SIDE, it.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
+//    }
 //    drawImage("$pngFile|$bxImag,$byImg,$SPRITE_DIV,$SPRITE_DIV", bx, by,CELL_SIDE,CELL_SIDE)//body
 
 

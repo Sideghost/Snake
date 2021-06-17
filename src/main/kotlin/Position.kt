@@ -20,7 +20,8 @@ operator fun Position.plus(direction: Direction) = Position(x + direction.dx(), 
  * @param wall List of all position already taken.
  * @return a true or false answer.
  */
-fun hasCollision(position: Position, wall: List<Position>) = wall.any { it == position }
+fun hasCollision(position: Position, wall: List<Position>, snake: List<Position>) =
+    wall.any { it == position } || snake.any { it == position }
 
 
 /**
@@ -30,6 +31,13 @@ fun hasCollision(position: Position, wall: List<Position>) = wall.any { it == po
  */
 fun Snake.headToPosition(key: Int) = body[0] + directionOf(key, this)
 
+fun Position.normalize() = when {
+        x < 0 -> Position(GRID_WIDTH - 1, y)
+        x > GRID_WIDTH - 1 -> Position(0, y)
+        y < 0 -> Position(x, GRID_HEIGHT - 1)
+        y > GRID_HEIGHT - 1 -> Position(x, 0)
+        else -> this
+    }
 
 // Verifies all possible position inside of the arena
 val ALL_POSITIONS: List<Position> =

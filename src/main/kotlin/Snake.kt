@@ -1,6 +1,6 @@
 import pt.isel.canvas.*
 
-
+const val INIT_SIZE = 5
 /**
  * Class that defines all the important proprieties of a Snake.
  * @property HeadPos Position(x,y) of the head in the Snake.
@@ -17,24 +17,19 @@ data class Snake(val body: List<Position>, val direction: Direction, val run: Bo
  * @return updated Game pass by snake.
  */
 fun move(key: Int, game: Game): Game{
+    //para a snake andar : a posicao da cabeca e afetada pela direcao ; e acrescentada uma vertebra ao 2 elemtento da lista
+    // a cauda sai da lista ; a cauda e redesenhada na ultima posicao da lista
     //if(game.status != Status.RUN) return game
-    val cervicalC1 = game.snake.body[0]
-    val headToPosition = game.snake.headToPosition(key)
-    val toPos = emptyList<Position>() +
-            when {
-                headToPosition.x < 0 -> Position(GRID_WIDTH - 1, headToPosition.y)
-                headToPosition.x > GRID_WIDTH - 1 -> Position(0, headToPosition.y)
-                headToPosition.y < 0 -> Position(headToPosition.x, GRID_HEIGHT - 1)
-                headToPosition.y > GRID_HEIGHT - 1 -> Position(headToPosition.x, 0)
-                else -> headToPosition
-            }
+    val headToPosition = game.snake.headToPosition(key).normalize()
+
+    val newSnake = if (game.snake.body.size >= INIT_SIZE ) game.snake.body.dropLast(1) else game.snake.body
 //    if (game.snake.toGrow > 0) {
 //
 //    }
-    return if (hasCollision(toPos[0], game.wall) || game.status != Status.RUN) game
+    return if (hasCollision(headToPosition, game.wall, game.snake.body) || game.status != Status.RUN) game
     else {
         Game(
-            Snake(toPos + cervicalC1 + game.snake.body.drop(1), game.snake.direction, game.snake.run, game.snake.toGrow),
+            Snake((emptyList<Position>() + headToPosition) + newSnake, game.snake.direction, game.snake.run, game.snake.toGrow),
             game.wall, game.apple, game.score, game.status)
     }
 }
