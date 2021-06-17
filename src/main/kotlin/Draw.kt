@@ -3,6 +3,7 @@ import pt.isel.canvas.WHITE
 
 /**
  * Function that draws the Snake in the canvas using a Sprite.
+ * @receiver where it will be drawn.
  * @param snake object with movement in the game.
  * @param pngFile input file that has the drawing of the snake.
  */
@@ -30,7 +31,7 @@ fun Canvas.drawSnake(snake: Snake, pngFile: String) {
     drawImage("$pngFile|$hxImg,$hyImg,$SPRITE_DIV,$SPRITE_DIV", bx[0], by[0], CELL_SIDE, CELL_SIDE)// head
     if (snake.body.size > 1)
         drawImage("$pngFile|$hxImg,$tyImg,$SPRITE_DIV,$SPRITE_DIV", bx.last(), by.last(), CELL_SIDE, CELL_SIDE)// tail
-
+    //TODO("Implement the rest of  the body")
 
 //    if(snake.body.size > 2 )
 //    (snake.body.subList(1,snake.body.size-2)).forEach {
@@ -66,7 +67,8 @@ fun Canvas.drawSnake(snake: Snake, pngFile: String) {
 
 /**
  * Draws the whole game.
- * @param game collection of [wall] && [snake].
+ * @receiver where it will be drawn.
+ * @param game collection of TODO "what to write?"
  */
 fun Canvas.drawGame(game: Game) {
     erase()
@@ -80,15 +82,17 @@ fun Canvas.drawGame(game: Game) {
 
 /**
  * Displays game information in status bar.
+ * @receiver where it will be drawn.
+ * @param game information to be written.
  */
-fun Canvas.drawStatus(g: Game) {
+fun Canvas.drawStatus(game: Game) {
     drawRect(0, height - STATUS_BAR, width, STATUS_BAR, 0x333333)
-    drawText(TEXT_BASE, height - TEXT_BASE, "Size:${g.snake.body.size}    Score:${g.score}", WHITE, FONT_SIZE)
-    if (g.status != Status.RUN)
+    drawText(TEXT_BASE, height - TEXT_BASE, "Size:${game.snake.body.size}    Score:${game.score}", WHITE, FONT_SIZE)
+    if (game.status != Status.RUN)
         drawText(
             width - 5 * CELL_SIDE,
             height - TEXT_BASE,
-            "You ${if (g.status == Status.WIN) "win" else "lose"}",
+            "You ${if (game.status == Status.WIN) "win" else "lose"}",
             WHITE
         )
 }
@@ -96,7 +100,7 @@ fun Canvas.drawStatus(g: Game) {
 
 /**
  * Draw the background grid.
- * @receiver where it will be drawn
+ * @receiver where it will be drawn.
  */
 fun Canvas.drawGrid() {
     (CELL_SIDE..height step CELL_SIDE).forEach {
@@ -110,6 +114,7 @@ fun Canvas.drawGrid() {
 
 /**
  * Function that draws a brick from the pngFile.
+ * @receiver where it will be drawn.
  * @param position position of each individual brick.
  * @param pngFile input file that has the drawing of the snake.
  */
@@ -118,12 +123,17 @@ fun Canvas.drawBrick(position: Position, pngFile: String) {
 }
 
 
+/**
+ * Function that draws an apple from the pngFile.
+ * @receiver where it will be drawn.
+ * @param position to be drawn if possible.
+ * @param pngFile input file that has the drawing of the apple.
+ */
 fun Canvas.drawApple(position: Position?, pngFile: String) {
     val xFile = 0
     val yFile = 3
     if (position != null)
         drawImage(
             "$pngFile|$xFile,${yFile * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV",
-            position.x * CELL_SIDE, position.y * CELL_SIDE, CELL_SIDE, CELL_SIDE
-        )
+            position.x * CELL_SIDE, position.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
 }

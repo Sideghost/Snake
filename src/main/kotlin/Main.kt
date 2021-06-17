@@ -1,7 +1,7 @@
 import pt.isel.canvas.*
 
 const val INIT_SCORE = 0
-const val INIT_TOGROW = 0
+const val INIT_TO_GROW = 0
 
 /**
  * Main function responsible for the game implementation.
@@ -9,7 +9,9 @@ const val INIT_TOGROW = 0
 fun main() {
     onStart {
         val cv = Canvas(CELL_SIDE * GRID_WIDTH, CELL_SIDE * GRID_HEIGHT + STATUS_BAR, BLACK)
-        var game = Game(Snake(listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2)), Direction.RIGHT, toGrow = INIT_TOGROW), initBlocks(), initApple(), INIT_SCORE, Status.RUN)
+        var game = Game(
+            Snake(listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2)), Direction.RIGHT, INIT_TO_GROW),
+            initBlocks(), initApple(), INIT_SCORE, Status.RUN)
 
         cv.drawGame(game)
         cv.onKeyPressed { ke: KeyEvent ->
@@ -25,7 +27,7 @@ fun main() {
             game = game.appleGetsEaten()
             game = Game(game.snake, game.wall, game.createRandomApple(), game.score, game.status)
             cv.drawGame(game)
-            println(game.snake.body)
+            println(game.snake.toGrow)
         }
 
     }

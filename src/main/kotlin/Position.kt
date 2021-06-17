@@ -1,3 +1,4 @@
+
 /**
  * Class that is used to defines all the relative positions.
  * @param x Coordinate in the x axis.
@@ -23,6 +24,16 @@ operator fun Position.plus(direction: Direction) = Position(x + direction.dx(), 
 fun hasCollision(position: Position, wall: List<Position>, snake: List<Position>) =
     wall.any { it == position } || snake.any { it == position }
 
+//fun Game.collisions() :Game {
+//    val walls = wall.map { it }.overlapped()
+//    val newStatus = when {
+//        snake.body[0].cantMove() -> Status.LOSE
+//        score > LEVEL_ONE_WIN -> Status.WIN
+//        else -> Status.RUN
+//    }
+//    return copy( wall = walls, status = newStatus)
+//}
+
 
 /**
  * Util function that given a code form the arrow adds it to the Head Position.
@@ -31,6 +42,12 @@ fun hasCollision(position: Position, wall: List<Position>, snake: List<Position>
  */
 fun Snake.headToPosition(key: Int) = body[0] + directionOf(key, this)
 
+
+/**
+ * Function that turns an illegal position into a legal one.
+ * @receiver Position to be normalized.
+ * @return Normalized position.
+ */
 fun Position.normalize() = when {
         x < 0 -> Position(GRID_WIDTH - 1, y)
         x > GRID_WIDTH - 1 -> Position(0, y)
@@ -39,8 +56,15 @@ fun Position.normalize() = when {
         else -> this
     }
 
+
 // Verifies all possible position inside of the arena
 val ALL_POSITIONS: List<Position> =
     (0 until GRID_HEIGHT * GRID_WIDTH).map { Position(it % GRID_WIDTH, it / GRID_WIDTH) }
 
-//operator fun Position.minus( other:Position ) = Motion(x-other.x, y-other.y)
+
+
+///**
+// * Gets overlapping positions from a list of positions.
+// */
+//fun List<Position>.overlapped() :List<Position> =
+//    filterIndexed { idx,pos ->  lastIndexOf(pos)>idx && indexOf(pos)==idx  }

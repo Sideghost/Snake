@@ -1,16 +1,22 @@
+
 /**
  * Function that takes a random position inside of all unused position.
  * @param game current state of the Game to be affected by possible changes.
- * @return a list of a single Position to be given to a Brick.
+ * @return a Position to be given to a Brick.
  */
-fun createRandomBrick(game: Game): List<Position> =
+fun createRandomBrick(game: Game): Position =
     if (game.apple == null)
-        (ALL_POSITIONS - game.snake.body - game.wall).shuffled().take(1).map { Position(it.x, it.y) }
+        (ALL_POSITIONS - game.snake.body - game.wall).random()
     else
-        (ALL_POSITIONS - game.snake.body - game.apple - game.wall).shuffled().take(1).map { Position(it.x, it.y) }
+        (ALL_POSITIONS - game.snake.body - game.apple - game.wall).random()
 
-fun initBlocks(): List<Position> {
-    val posInit = listOf<Position>(
+
+//HardCoded
+/**
+ * Function that draws the initial walls.
+ * @return List of the initial walls.
+ */
+fun initBlocks(): List<Position> = listOf(
         Position(0, 0), Position(1, 0), Position(2, 0),
         Position(17, 0), Position(18, 0), Position(19, 0),
         Position(0, 15), Position(1, 15), Position(2, 15),
@@ -20,7 +26,4 @@ fun initBlocks(): List<Position> {
         Position(0, 12), Position(0, 13), Position(0, 14),
         Position(19, 12), Position(19, 13), Position(19, 14)
     )
-
-    return posInit
-}
 
