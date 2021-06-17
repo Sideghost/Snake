@@ -1,6 +1,3 @@
-import pt.isel.canvas.*
-
-
 // Game constants.
 const val CELL_SIDE = 32
 const val GRID_WIDTH = 20
@@ -9,6 +6,13 @@ const val SPRITE_DIV = 64
 const val BLOCK_SPAWN_TIMER = 5000
 const val QUART_OF_A_SEC = 250
 const val STATUS_BAR = 40
+const val TEXT_BASE = 10
+const val FONT_SIZE = 25
+
+/**
+ * The three possible game states.
+ */
+enum class Status { RUN, WIN, LOSE }
 
 
 /**
@@ -17,37 +21,4 @@ const val STATUS_BAR = 40
  * @property wall obstacles that stop movement of the [snake].
  */
 //data class Game(val snake: Snake, val wall: List<Position>)
-data class Game(val snake:Snake, val wall:List<Position>, val apple:Position?, val score:Int )
-
-/**
- * Draws the whole game.
- * @param game collection of [wall] && [snake].
- */
-fun Canvas.drawGame(game: Game) {
-    erase()
-    drawSnake(game.snake, "snake.png")
-    game.wall.forEach { drawBrick(it, "bricks.png") }
-    drawStatus(game)
-    drawApple(game.apple,"snake.png")
-}
-
-
-/**
- * Function that draws a brick from the pngFile.
- * @param position position of each individual brick.
- * @param pngFile input file that has the drawing of the snake.
- */
-fun Canvas.drawBrick(position: Position, pngFile: String) {
-    drawImage(pngFile, position.x * CELL_SIDE, position.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
-}
-
-fun Canvas.drawApple(position: Position?, pngFile: String) {
-    val xFile = 0
-    val yFile = 3
-    if (position != null)
-    drawImage("$pngFile|$xFile,$yFile,$SPRITE_DIV,$SPRITE_DIV", position.x * CELL_SIDE, position.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
-}
-
-fun Canvas.drawStatus(g:Game) {
-    drawRect(0,height-STATUS_BAR,width,STATUS_BAR,0x555555)
-}
+data class Game(val snake: Snake, val wall: List<Position>, val apple: Position?, val score: Int, val status: Status)

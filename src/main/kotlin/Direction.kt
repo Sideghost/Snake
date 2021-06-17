@@ -50,5 +50,5 @@ fun snakeDirection(key: Int, game: Game): Snake {
     val headToPosition = game.snake.headToPosition(key)
 
     return if (game.wall.any { it == headToPosition } || headToPosition == game.snake.body.last()) game.snake
-    else Snake(game.snake.body, directionOf(key, game.snake),game.snake.run,game.snake.toGrow)
+    else Snake(game.snake.body, directionOf(key, game.snake), game.snake.run, game.snake.toGrow)
 }
