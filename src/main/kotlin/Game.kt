@@ -1,6 +1,7 @@
 
 // Game constants.
 const val CELL_SIDE = 32
+const val FIVE_CELLS = CELL_SIDE * 5
 const val GRID_WIDTH = 20
 const val GRID_HEIGHT = 16
 const val SPRITE_DIV = 64

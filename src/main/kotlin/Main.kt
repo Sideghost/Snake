@@ -24,10 +24,9 @@ fun main() {
 
         cv.onTimeProgress(QUART_OF_A_SEC) {
             game = move(it.toInt(), game)
-            game = game.appleGetsEaten()
             game = Game(game.snake, game.wall, game.createRandomApple(), game.score, game.status)
             cv.drawGame(game)
-            println(game.snake.toGrow)
+            //println(game.status)
         }
 
     }
