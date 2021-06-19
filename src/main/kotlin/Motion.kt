@@ -23,7 +23,10 @@ operator fun Position.minus(position:Position) = Motion(x - position.x,y - posit
  */
 fun sign(value :Int) = when {
     value == 0 -> 0
-    value < 0 -> -1
+    value == -1 -> -1
+//    value == 1 -> 1
+    value < -1 -> +1
+    value > +1 -> -1
     else -> +1
 }
 
