@@ -10,7 +10,6 @@ const val OUT_OF_BOUNDS = 10
  * @param pngFile input file that has the drawing of the snake.
  */
 fun Canvas.drawSnake(snake: Snake, pngFile: String) {
-
     val bx = snake.body.map { it.x * CELL_SIDE - snake.direction.dx() }
     val by = snake.body.map { it.y * CELL_SIDE - snake.direction.dy() }
     val hxImg = SPRITE_DIV * when (snake.direction) {
@@ -23,8 +22,7 @@ fun Canvas.drawSnake(snake: Snake, pngFile: String) {
         Direction.LEFT, Direction.DOWN -> 1
     }
 
-
-    val txImg = SPRITE_DIV * when (snake.direction){
+    val txImg = SPRITE_DIV * when (snake.direction) {
         Direction.LEFT, Direction.UP -> 3
         Direction.RIGHT, Direction.DOWN -> 4
     }
@@ -34,15 +32,32 @@ fun Canvas.drawSnake(snake: Snake, pngFile: String) {
         Direction.LEFT, Direction.DOWN -> 3
     }
 
-
-
     drawImage("$pngFile|$hxImg,$hyImg,$SPRITE_DIV,$SPRITE_DIV", bx[0], by[0], CELL_SIDE, CELL_SIDE)// head
-    if (snake.body.size == 2)
-        drawImage("$pngFile|$hxImg,$tyImg,$SPRITE_DIV,$SPRITE_DIV", bx.last(), by.last(), CELL_SIDE, CELL_SIDE)// tail
-    //TODO("Implement the rest of  the body ; ERROR IN INDECES")
+//    if (snake.body.size == 2)
+//    drawImage("$pngFile|$txImg,$tyImg,$SPRITE_DIV,$SPRITE_DIV", bx.last(), by.last(), CELL_SIDE, CELL_SIDE)// tail
+
 
     if (snake.body.size > 2)
-        for (i in 1 until snake.body.size - 1) {
+        for (i in snake.body.size-2 until snake.body.size){
+            val next = (snake.body[i] - snake.body[i - 1]).toDirection()
+
+            val (txImg1, tyImg1) = when {
+                next.dx == 0 && next == Direction.UP -> 4 to 3
+
+                next.dx == 0 && next == Direction.DOWN -> 3 to 2
+
+                next.dy == 0 && next == Direction.LEFT -> 4 to 2
+
+                next.dy == 0 && next == Direction.RIGHT -> 3 to 3
+
+                else -> 0 to 3
+            }
+
+            drawImage("$pngFile|${txImg1 * SPRITE_DIV},${tyImg1 * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV", bx.last(), by.last(), CELL_SIDE, CELL_SIDE)// tail
+
+        }
+
+        for (i in 1 until  snake.body.size - 1) {
             val next = (snake.body[i] - snake.body[i - 1]).toDirection()
             val previous = (snake.body[i + 1] - snake.body[i]).toDirection()
 
@@ -69,15 +84,17 @@ fun Canvas.drawSnake(snake: Snake, pngFile: String) {
                 //Vertical
                 next.dx == 0 && previous.dx == 0 -> Pair(2, 1)
 
-
-
                 else -> 0 to 2
             }
-
-            drawImage("$pngFile|${xImg * SPRITE_DIV},${yImg * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV", snake.body[i].x * CELL_SIDE, snake.body[i].y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
+            drawImage(
+                "$pngFile|${xImg * SPRITE_DIV},${yImg * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV",
+                snake.body[i].x * CELL_SIDE,
+                snake.body[i].y * CELL_SIDE,
+                CELL_SIDE,
+                CELL_SIDE
+            )
         }
-    }
-
+}
 
 
 /**

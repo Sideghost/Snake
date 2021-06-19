@@ -26,6 +26,14 @@ fun move(key: Int, game: Game): Game {
         game.wall, game.apple, game.score, game.status).appleGetsEaten()
 }
 
+
+
+
+
+
+
+
+
 fun List<Position>.lose(game: Game): Game{
     return if(this[0] in game.snake.body + game.wall) game.copy(status = Status.LOSE)
         else game
