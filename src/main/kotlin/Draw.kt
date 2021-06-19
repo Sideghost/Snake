@@ -3,6 +3,30 @@ import pt.isel.canvas.*
 
 const val OUT_OF_BOUNDS = 10
 
+
+fun Canvas.drawTail(snake: Snake, pngFile: String){
+    val pos = snake.body.last()
+    val posamt = if (snake.body.size > 1) snake.body[snake.body.size-2] else pos
+    val next = (pos - posamt).toDirection()
+
+    val (txImg1, tyImg1) = when (next) {
+        Direction.UP -> 4 to 3
+        Direction.DOWN -> 3 to 2
+        Direction.LEFT -> 4 to 2
+        Direction.RIGHT -> 3 to 3
+        else -> 0 to 3
+    }
+
+    drawImage(
+        "$pngFile|${txImg1 * SPRITE_DIV},${tyImg1 * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV",
+        snake.body.last().x * CELL_SIDE,
+        snake.body.last().y * CELL_SIDE,
+        CELL_SIDE,
+        CELL_SIDE
+    )// tail
+
+}
+
 /**
  * Function that draws the Snake in the canvas using a Sprite.
  * @receiver where it will be drawn.
@@ -33,67 +57,70 @@ fun Canvas.drawSnake(snake: Snake, pngFile: String) {
     }
 
     drawImage("$pngFile|$hxImg,$hyImg,$SPRITE_DIV,$SPRITE_DIV", bx[0], by[0], CELL_SIDE, CELL_SIDE)// head
-//    if (snake.body.size == 2)
-//    drawImage("$pngFile|$txImg,$tyImg,$SPRITE_DIV,$SPRITE_DIV", bx.last(), by.last(), CELL_SIDE, CELL_SIDE)// tail
+    if (snake.body.size == 2)
+    drawImage("$pngFile|$txImg,$tyImg,$SPRITE_DIV,$SPRITE_DIV", bx.last(), by.last(), CELL_SIDE, CELL_SIDE)// tail
 
 
     if (snake.body.size > 2)
-        for (i in snake.body.size-2 until snake.body.size){
-            val next = (snake.body[i] - snake.body[i - 1]).toDirection()
+//        for (i in snake.body.size - 2 until snake.body.size) {
+//            val next = (snake.body[i] - snake.body[i - 1]).toDirection()
+//
+//            val (txImg1, tyImg1) = when (next) {
+//                Direction.UP -> 4 to 3
+//                Direction.DOWN -> 3 to 2
+//                Direction.LEFT -> 4 to 2
+//                Direction.RIGHT -> 3 to 3
+//                else -> 0 to 3
+//            }
+//
+//            drawImage(
+//                "$pngFile|${txImg1 * SPRITE_DIV},${tyImg1 * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV",
+//                snake.body.last().x * CELL_SIDE,
+//                snake.body.last().y * CELL_SIDE,
+//                CELL_SIDE,
+//                CELL_SIDE
+//            )// tail
+//
+//        }
 
-            val (txImg1, tyImg1) = when {
-                next.dx == 0 && next == Direction.UP -> 4 to 3
+    for (i in 1 until snake.body.size - 1) {
+        val next = (snake.body[i] - snake.body[i - 1]).toDirection()
+        val previous = (snake.body[i + 1] - snake.body[i]).toDirection()
 
-                next.dx == 0 && next == Direction.DOWN -> 3 to 2
+        val (xImg, yImg) = when {
+            //LOWER_LEFT_CORNER
+            next == Direction.LEFT && previous == Direction.UP ||
+                    next == Direction.DOWN && previous == Direction.RIGHT -> 0 to 1
 
-                next.dy == 0 && next == Direction.LEFT -> 4 to 2
+            //UPPER_LEFT_CORNER
+            next == Direction.LEFT && previous == Direction.DOWN ||
+                    next == Direction.UP && previous == Direction.RIGHT -> 0 to 0
 
-                next.dy == 0 && next == Direction.RIGHT -> 3 to 3
+            //LOWER_RIGHT_CORNER
+            next == Direction.DOWN && previous == Direction.LEFT ||
+                    next == Direction.RIGHT && previous == Direction.UP -> 2 to 2
 
-                else -> 0 to 3
-            }
+            //UPPER_RIGHT_CORNER
+            next == Direction.UP && previous == Direction.LEFT ||
+                    next == Direction.RIGHT && previous == Direction.DOWN -> 2 to 0
 
-            drawImage("$pngFile|${txImg1 * SPRITE_DIV},${tyImg1 * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV", bx.last(), by.last(), CELL_SIDE, CELL_SIDE)// tail
+            //Horizontal
+            next.dy == 0 && previous.dy == 0 -> 1 to 0
 
+            //Vertical
+            next.dx == 0 && previous.dx == 0 -> Pair(2, 1)
+
+            else -> 0 to 2
         }
-
-        for (i in 1 until  snake.body.size - 1) {
-            val next = (snake.body[i] - snake.body[i - 1]).toDirection()
-            val previous = (snake.body[i + 1] - snake.body[i]).toDirection()
-
-            val (xImg, yImg) = when {
-                //LOWER_LEFT_CORNER
-                next == Direction.LEFT && previous == Direction.UP ||
-                        next == Direction.DOWN && previous == Direction.RIGHT -> 0 to 1
-
-                //UPPER_LEFT_CORNER
-                next == Direction.LEFT && previous == Direction.DOWN ||
-                        next == Direction.UP && previous == Direction.RIGHT -> 0 to 0
-
-                //LOWER_RIGHT_CORNER
-                next == Direction.DOWN && previous == Direction.LEFT ||
-                        next == Direction.RIGHT && previous == Direction.UP -> 2 to 2
-
-                //UPPER_RIGHT_CORNER
-                next == Direction.UP && previous == Direction.LEFT ||
-                        next == Direction.RIGHT && previous == Direction.DOWN -> 2 to 0
-
-                //Horizontal
-                next.dy == 0 && previous.dy == 0 -> 1 to 0
-
-                //Vertical
-                next.dx == 0 && previous.dx == 0 -> Pair(2, 1)
-
-                else -> 0 to 2
-            }
-            drawImage(
-                "$pngFile|${xImg * SPRITE_DIV},${yImg * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV",
-                snake.body[i].x * CELL_SIDE,
-                snake.body[i].y * CELL_SIDE,
-                CELL_SIDE,
-                CELL_SIDE
-            )
-        }
+        drawImage(
+            "$pngFile|${xImg * SPRITE_DIV},${yImg * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV",
+            snake.body[i].x * CELL_SIDE,
+            snake.body[i].y * CELL_SIDE,
+            CELL_SIDE,
+            CELL_SIDE
+        )
+    }
+    drawTail(snake, pngFile)
 }
 
 

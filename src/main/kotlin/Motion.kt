@@ -31,6 +31,7 @@ fun sign(value :Int) = when {
 }
 
 
+
 /**
  * Function transforms the motion in a direction.
  * @receiver Motion to transform
