@@ -1,7 +1,7 @@
-import pt.isel.canvas.Canvas
-import pt.isel.canvas.GREEN
-import pt.isel.canvas.WHITE
-import pt.isel.canvas.YELLOW
+import pt.isel.canvas.*
+
+
+const val OUT_OF_BOUNDS = 10
 
 /**
  * Function that draws the Snake in the canvas using a Sprite.
@@ -13,7 +13,6 @@ fun Canvas.drawSnake(snake: Snake, pngFile: String) {
 
     val bx = snake.body.map { it.x * CELL_SIDE - snake.direction.dx() }
     val by = snake.body.map { it.y * CELL_SIDE - snake.direction.dy() }
-
     val hxImg = SPRITE_DIV * when (snake.direction) {
         Direction.LEFT, Direction.UP -> 3
         Direction.RIGHT, Direction.DOWN -> 4
@@ -30,80 +29,53 @@ fun Canvas.drawSnake(snake: Snake, pngFile: String) {
     }
 
 
+
     drawImage("$pngFile|$hxImg,$hyImg,$SPRITE_DIV,$SPRITE_DIV", bx[0], by[0], CELL_SIDE, CELL_SIDE)// head
     if (snake.body.size > 1)
         drawImage("$pngFile|$hxImg,$tyImg,$SPRITE_DIV,$SPRITE_DIV", bx.last(), by.last(), CELL_SIDE, CELL_SIDE)// tail
-    //TODO("Implement the rest of  the body")
+    //TODO("Implement the rest of  the body ; ERROR IN INDECES")
 
-    if(snake.body.size > 2 )
-    (snake.body.subList(1,snake.body.size-1)).forEach {
+    if (snake.body.size > 2)
+        for (i in 1 until snake.body.size - 1) {
+            val next = (snake.body[i] - snake.body[i - 1])/*.toRigthPlace()*/.toDirection()
+            val previous = (snake.body[i + 1] - snake.body[i]).toDirection()
 
-        val bxImag = SPRITE_DIV * when ((snake.body[it.x] - snake.body[it.x-1]).toDirection()) {
-            Direction.LEFT, Direction.RIGHT -> 1
-            Direction.DOWN, Direction.UP -> 2
+            val (xImg, yImg) = when {
+                //LOWER_LEFT_CORNER
+                next == Direction.LEFT && previous == Direction.UP ||
+                        next == Direction.DOWN && previous == Direction.RIGHT -> 0 to 1
+
+                //UPPER_LEFT_CORNER
+                next == Direction.LEFT && previous == Direction.DOWN ||
+                        next == Direction.UP && previous == Direction.RIGHT -> 0 to 0
+
+                //LOWER_RIGHT_CORNER
+                next == Direction.DOWN && previous == Direction.LEFT ||
+                        next == Direction.RIGHT && previous == Direction.UP -> 2 to 2
+
+                //UPPER_RIGHT_CORNER
+                next == Direction.UP && previous == Direction.LEFT ||
+                        next == Direction.RIGHT && previous == Direction.DOWN -> 2 to 0
+
+                //Horizontal
+                next.dy == 0 && previous.dy == 0 -> 1 to 0
+
+                //Vertical
+                next.dx == 0 && previous.dx == 0 -> Pair(2, 1)
+
+                else -> 0 to 2
+            }
+
+            drawImage(
+                "$pngFile|${xImg * SPRITE_DIV},${yImg * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV",
+                snake.body[i].x * CELL_SIDE,
+                snake.body[i].y * CELL_SIDE,
+                CELL_SIDE,
+                CELL_SIDE
+            )
         }
-
-        val byImg = SPRITE_DIV * when ((snake.body[it.y] - snake.body[it.y-1]).toDirection()) {
-            Direction.UP, Direction.DOWN -> 1
-            Direction.RIGHT, Direction.LEFT -> 0
-        }
-
-        val xImg = SPRITE_DIV * when ((snake.body[it.x] - snake.body[it.x-1]).toDirection()) {
-            Direction.LEFT, Direction.DOWN -> 2
-            Direction.RIGHT, Direction.UP -> 0
-        }
-
-        val yImg = SPRITE_DIV * when ((snake.body[it.y] - snake.body[it.y-1]).toDirection()) {
-            Direction.UP -> 1
-            Direction.DOWN, Direction.RIGHT -> 0
-            Direction.LEFT -> 2
-        }
-
-        drawImage("$pngFile|$xImg,$yImg,$SPRITE_DIV,$SPRITE_DIV", it.x * CELL_SIDE, it.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
-    }
-//    drawImage("$pngFile|$bxImag,$byImg,$SPRITE_DIV,$SPRITE_DIV", bx, by,CELL_SIDE,CELL_SIDE)//body
 }
 
-//fun Canvas.drawSnake(snake: Snake, pngFile: String) {
-//
-//    val bx = snake.body.map { it.x * CELL_SIDE - snake.direction.dx() }
-//    val by = snake.body.map { it.y * CELL_SIDE - snake.direction.dy() }
-//
-//    val hxImg = SPRITE_DIV * when (snake.direction) {
-//        Direction.LEFT, Direction.UP -> 3
-//        Direction.RIGHT, Direction.DOWN -> 4
-//    }
-//
-//    val hyImg = SPRITE_DIV * when (snake.direction) {
-//        Direction.UP, Direction.RIGHT -> 0
-//        Direction.LEFT, Direction.DOWN -> 1
-//    }
-//
-//    val tyImg = SPRITE_DIV * when (snake.direction) {
-//        Direction.UP, Direction.RIGHT -> 2
-//        Direction.LEFT, Direction.DOWN -> 3
-//    }
-//
-//    val byImg = SPRITE_DIV * when (snake.direction) {
-//        Direction.UP, Direction.DOWN -> 1
-//        Direction.LEFT, Direction.RIGHT -> 0
-//    }
-//
-//    val bxImg = SPRITE_DIV * when (snake.direction) {
-//        Direction.UP, Direction.DOWN -> 2
-//        Direction.LEFT, Direction.RIGHT -> 1
-//    }
-//
-//
-//    drawImage("$pngFile|$hxImg,$hyImg,$SPRITE_DIV,$SPRITE_DIV", bx[0], by[0], CELL_SIDE, CELL_SIDE)// head
-//    if (snake.body.size > 1)
-//        drawImage("$pngFile|$hxImg,$tyImg,$SPRITE_DIV,$SPRITE_DIV", bx.last(), by.last(), CELL_SIDE, CELL_SIDE)// tail
-//    //TODO("Implement the rest of  the body")
-//    if(snake.body.size > 2 )
-//        (snake.body.subList(1,snake.body.size-1)).forEach {
-//            drawImage("$pngFile|$bxImg,$byImg,$SPRITE_DIV,$SPRITE_DIV", it.x * CELL_SIDE, it.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
-//        }
-//}
 
 /**
  * Draws the whole game.
@@ -128,13 +100,18 @@ fun Canvas.drawGame(game: Game) {
 fun Canvas.drawStatus(game: Game) {
     drawRect(0, height - STATUS_BAR, width, STATUS_BAR, 0x333333)
     if (game.snake.body.size < 60)
-        drawText(CELL_SIDE/2, height - TEXT_BASE, "Size:${(game.snake.body.size)}", WHITE, FONT_SIZE)
+        drawText(CELL_SIDE / 2, height - TEXT_BASE, "Size:${(game.snake.body.size)}", WHITE, FONT_SIZE)
     else
-        drawText(CELL_SIDE/2, height - TEXT_BASE, "Size:${(game.snake.body.size)}", GREEN, FONT_SIZE)
+        drawText(CELL_SIDE / 2, height - TEXT_BASE, "Size:${(game.snake.body.size)}", GREEN, FONT_SIZE)
     drawText(FIVE_CELLS, height - TEXT_BASE, "Score:${game.score}", WHITE, FONT_SIZE)
 
     if (game.status != Status.RUN)
-        drawText(width - FIVE_CELLS, height - TEXT_BASE, "You ${if (game.status == Status.WIN) "WIN" else "LOSE"}", YELLOW)
+        drawText(
+            width - FIVE_CELLS,
+            height - TEXT_BASE,
+            "You ${if (game.status == Status.WIN) "WIN" else "LOSE"}",
+            YELLOW
+        )
 }
 
 
@@ -175,5 +152,6 @@ fun Canvas.drawApple(position: Position?, pngFile: String) {
     if (position != null)
         drawImage(
             "$pngFile|$xFile,${yFile * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV",
-            position.x * CELL_SIDE, position.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
+            position.x * CELL_SIDE, position.y * CELL_SIDE, CELL_SIDE, CELL_SIDE
+        )
 }
