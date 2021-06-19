@@ -1,3 +1,4 @@
+import pt.isel.canvas.playSound
 
 /**
  * Function that chooses randomly an initial apple position.
@@ -22,7 +23,9 @@ fun Game.createRandomApple() = when {
  * @return TODO "what to write?"
  */
 fun Game.appleGetsEaten() =
-    if (snake.body[0] == apple)
+    if (snake.body[0] == apple){
+        playSound("eat.wav")
         Game(Snake(snake.body, snake.direction, snake.toGrow + 5), wall, null, score + 1, status)
+    }
     else this
 

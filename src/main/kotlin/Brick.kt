@@ -26,4 +26,3 @@ fun initBlocks(): List<Position> = listOf(
         Position(0, 12), Position(0, 13), Position(0, 14),
         Position(19, 12), Position(19, 13), Position(19, 14)
     )
-

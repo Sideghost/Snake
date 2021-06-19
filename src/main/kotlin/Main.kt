@@ -14,6 +14,7 @@ fun main() {
             initBlocks(), initApple(), INIT_SCORE, Status.RUN)
 
         cv.drawGame(game)
+        loadSounds("eat.wav")
         cv.onKeyPressed { ke: KeyEvent ->
             game = Game(snakeDirection(ke.code, game), game.wall, game.apple, game.score, game.status)
         }
