@@ -1,4 +1,5 @@
 
+
 /**
  * Class that defines the displacement between 2 positions.
  * @property dx displacement value on the x axis.
@@ -24,7 +25,6 @@ operator fun Position.minus(position:Position) = Motion(x - position.x,y - posit
 fun sign(value :Int) = when {
     value == 0 -> 0
     value == -1 -> -1
-//    value == 1 -> 1
     value < -1 -> +1
     value > +1 -> -1
     else -> +1

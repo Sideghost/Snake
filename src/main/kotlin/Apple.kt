@@ -1,3 +1,6 @@
+
+
+//IMPORT THAT ALLOWS TO HAVE SOUNDS ON THE GAME
 import pt.isel.canvas.playSound
 
 /**
@@ -20,12 +23,12 @@ fun Game.createRandomApple() = when {
 /**
  * Function that verify if an apple gets eaten and all stats related to that.
  * @receiver Game proprieties.
- * @return TODO "what to write?"
+ * @return a new game, if the apple gets eaten makes a characteristic Sound.
  */
 fun Game.appleGetsEaten() =
     if (snake.body[0] == apple){
         playSound("eat.wav")
-        Game(Snake(snake.body, snake.direction, snake.toGrow + 5), wall, null, score + 1, status)
+        this.copy(snake = this.snake.copy(toGrow = snake.toGrow + 5), apple = null, score = score + 1)
     }
     else this
 

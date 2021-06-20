@@ -1,3 +1,6 @@
+
+
+//IMPORT FROM THE CANVAS LIB
 import pt.isel.canvas.*
 
 const val INIT_SCORE = 0
@@ -9,30 +12,30 @@ const val INIT_TO_GROW = 0
 fun main() {
     onStart {
         val cv = Canvas(CELL_SIDE * GRID_WIDTH, CELL_SIDE * GRID_HEIGHT + STATUS_BAR, BLACK)
-        var game = Game(
-            Snake(listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2)), Direction.RIGHT, INIT_TO_GROW),
+        var game = Game(Snake(listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2)), Direction.RIGHT, INIT_TO_GROW),
             initBlocks(), initApple(), INIT_SCORE, Status.RUN)
 
         cv.drawGame(game)
         loadSounds("eat.wav")
-        cv.onKeyPressed { ke: KeyEvent ->
-            game = Game(snakeDirection(ke.code, game), game.wall, game.apple, game.score, game.status)
+
+        cv.onKeyPressed {
+            game = game.copy(snake = snakeDirection(it.code, game))
         }
 
         cv.onTimeProgress(BLOCK_SPAWN_TIMER) {
-            game = Game(game.snake, game.wall + createRandomBrick(game), game.apple, game.score, game.status)
+            game = if(game.status == Status.RUN)
+                game.copy(wall = game.wall + createRandomBrick(game))
+            else game
         }
 
         cv.onTimeProgress(QUART_OF_A_SEC) {
-            game = move(it.toInt(), game)
-            game = Game(game.snake, game.wall, game.createRandomApple(), game.score, game.status)
+            game = move(it.toInt(), game).isPossible()
+            game = game.copy(apple = game.createRandomApple())
             cv.drawGame(game)
-            //println(game.status)
         }
 
     }
     onFinish {
-        println("WORK IN PROGRESS...")
-        //println("FINALLY DONE!!!")
+        println("FINALLY DONE!!! MINHA NOSSA...")
     }
 }

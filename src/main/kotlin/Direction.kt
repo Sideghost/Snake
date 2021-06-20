@@ -1,4 +1,5 @@
 
+
 //Imports of the codes from keyboard arrows.
 import pt.isel.canvas.DOWN_CODE
 import pt.isel.canvas.LEFT_CODE
@@ -51,5 +52,6 @@ fun snakeDirection(key: Int, game: Game): Snake {
     val headToPosition = game.snake.headToPosition(key).normalize()
 
     return if (game.wall.any { it == headToPosition } || headToPosition in game.snake.body) game.snake
-    else Snake(game.snake.body, directionOf(key, game.snake), game.snake.toGrow)
+    else game.snake.copy(direction = directionOf(key, game.snake))
 }
+

@@ -24,16 +24,6 @@ operator fun Position.plus(direction: Direction) = Position(x + direction.dx(), 
 fun hasCollision(position: Position, wall: List<Position>, snake: List<Position>) =
     wall.any { it == position } || snake.any { it == position }
 
-//fun Game.collisions() :Game {
-//    val walls = wall.map { it }.overlapped()
-//    val newStatus = when {
-//        snake.body[0].cantMove() -> Status.LOSE
-//        score > LEVEL_ONE_WIN -> Status.WIN
-//        else -> Status.RUN
-//    }
-//    return copy( wall = walls, status = newStatus)
-//}
-
 
 /**
  * Util function that given a code form the arrow adds it to the Head Position.
@@ -62,9 +52,3 @@ val ALL_POSITIONS: List<Position> =
     (0 until GRID_HEIGHT * GRID_WIDTH).map { Position(it % GRID_WIDTH, it / GRID_WIDTH) }
 
 
-
-///**
-// * Gets overlapping positions from a list of positions.
-// */
-//fun List<Position>.overlapped() :List<Position> =
-//    filterIndexed { idx,pos ->  lastIndexOf(pos)>idx && indexOf(pos)==idx  }
