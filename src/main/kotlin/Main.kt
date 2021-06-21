@@ -12,15 +12,15 @@ fun main() {
         val cv = Canvas(CELL_SIDE * GRID_WIDTH, CELL_SIDE * GRID_HEIGHT + STATUS_BAR, BLACK)
         var game = Game(
             Snake(listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2)), Direction.RIGHT, INIT_TO_GROW),
-            initBlocks(), initApple(), INIT_SCORE, Status.RUN, Leevel(1), Hack(null, null)
+            initBlocks(), initApple(), INIT_SCORE, Status.RUN, Hack(null, null, grid = false, sound = false, 1)
         )
 
         cv.drawGame(game)
-        loadSounds("eat.wav", "Win.wav", "Defeat.wav")
+        loadSounds("eat.wav", "Win.wav", "Defeat.wav", "poison_eat.wav", "Victory.wav")
 
         cv.onKeyPressed {
             game = game.copy(snake = snakeDirection(it.code, game))
-            game = nextLv(it.code, game)
+            game = options(it.code, game)
         }
 
         cv.onTimeProgress(BLOCK_SPAWN_TIMER) {
@@ -33,7 +33,13 @@ fun main() {
             game = move(it.toInt(), game).isPossible()
             game = game.copy(
                 apple = game.createRandomApple(),
-                hacking = Hack(game.createRandomPoisonApple(game.hacking), game.createRandomGoldenApple(game.hacking))
+                hacking = Hack(
+                    game.createRandomPoisonApple(game.hacking),
+                    game.createRandomGoldenApple(game.hacking),
+                    game.hacking.grid,
+                    game.hacking.sound,
+                    game.hacking.level
+                )
             )
             cv.drawGame(game)
         }

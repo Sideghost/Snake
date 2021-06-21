@@ -1,4 +1,3 @@
-
 /**
  * Class that is used to defines all the relative positions.
  * @param x Coordinate in the x axis.
@@ -39,12 +38,12 @@ fun Snake.headToPosition(key: Int) = body[0] + directionOf(key, this)
  * @return Normalized position.
  */
 fun Position.normalize() = when {
-        x < 0 -> Position(GRID_WIDTH - 1, y)
-        x > GRID_WIDTH - 1 -> Position(0, y)
-        y < 0 -> Position(x, GRID_HEIGHT - 1)
-        y > GRID_HEIGHT - 1 -> Position(x, 0)
-        else -> this
-    }
+    x < 0 -> Position(GRID_WIDTH - 1, y)
+    x > GRID_WIDTH - 1 -> Position(0, y)
+    y < 0 -> Position(x, GRID_HEIGHT - 1)
+    y > GRID_HEIGHT - 1 -> Position(x, 0)
+    else -> this
+}
 
 
 // Verifies all possible position inside of the arena

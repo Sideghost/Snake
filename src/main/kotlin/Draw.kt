@@ -9,7 +9,9 @@ import pt.isel.canvas.*
  */
 fun Canvas.drawGame(game: Game) {
     erase()
-    drawGrid()
+    if (game.hacking.grid){
+        drawGrid()
+    }
     drawSnake(game.snake, "snake.png")
     game.wall.forEach { drawBrick(it, "bricks.png") }
     drawApple(game.apple, "snake.png")
@@ -54,6 +56,12 @@ fun Canvas.drawSnake(snake: Snake, pngFile: String) {
 }
 
 
+/**
+ * Function that draws the Head of the Snake in the canvas using a Sprite.
+ * @receiver where it will be drawn.
+ * @param snake object with movement in the game.
+ * @param pngFile input file that has the drawing of the snake.
+ */
 fun Canvas.drawHead(snake: Snake, pngFile: String) {
     val bx = snake.body[0].x * CELL_SIDE - snake.direction.dx()
     val by = snake.body[0].y * CELL_SIDE - snake.direction.dy()
@@ -73,6 +81,12 @@ fun Canvas.drawHead(snake: Snake, pngFile: String) {
 }
 
 
+/**
+ * Function that draws the Tail of the Snake in the canvas using a Sprite.
+ * @receiver where it will be drawn.
+ * @param snake object with movement in the game.
+ * @param pngFile input file that has the drawing of the snake.
+ */
 fun Canvas.drawTail(snake: Snake, pngFile: String) {
     val position = if (snake.body.size > 1) snake.body[snake.body.size - 2] else snake.body.last()
     val next = (snake.body.last() - position).toDirection()
@@ -90,6 +104,12 @@ fun Canvas.drawTail(snake: Snake, pngFile: String) {
 }
 
 
+/**
+ * Function that draws the Tail of the Snake in the canvas using a Sprite.
+ * @receiver where it will be drawn.
+ * @param snake object with movement in the game.
+ * @param pngFile input file that has the drawing of the snake.
+ */
 fun Canvas.drawBody(snake: Snake, pngFile: String) {
     snake.body.forEachIndexed { idx, _ ->
         if (idx != 0 && idx != snake.body.size - 1) {
@@ -111,6 +131,7 @@ fun Canvas.drawBody(snake: Snake, pngFile: String) {
         }
     }
 }
+
 
 /**
  * Function that draws a brick from the pngFile.
@@ -140,11 +161,24 @@ fun Canvas.drawApple(position: Position?, pngFile: String) {
 }
 
 
+/**
+ * Function that draws a poisonous apple from the pngFile.
+ * @receiver where it will be drawn.
+ * @param position to be drawn if possible.
+ * @param pngFile input file that has the drawing of the apple.
+ */
 fun Canvas.drawApplePoison(position: Position?, pngFile: String) {
     if (position != null)
         drawImage(pngFile, position.x * CELL_SIDE, position.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
 }
 
+
+/**
+ * Function that draws a golden apple from the pngFile.
+ * @receiver where it will be drawn.
+ * @param position to be drawn if possible.
+ * @param pngFile input file that has the drawing of the apple.
+ */
 fun Canvas.drawAppleGolden(position: Position?, pngFile: String) {
     if (position != null)
         drawImage(pngFile, position.x * CELL_SIDE, position.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
@@ -158,7 +192,7 @@ fun Canvas.drawAppleGolden(position: Position?, pngFile: String) {
  */
 fun Canvas.drawStatus(game: Game) {
     drawRect(0, height - STATUS_BAR, width, STATUS_BAR, 0x333333)
-    if (game.snake.body.size < 60)
+    if (game.snake.body.size < Level_WIN)
         drawText(CELL_SIDE / 2, height - TEXT_BASE, "Size:${(game.snake.body.size)}", WHITE, FONT_SIZE)
     else
         drawText(CELL_SIDE / 2, height - TEXT_BASE, "Size:${(game.snake.body.size)}", GREEN, FONT_SIZE)
@@ -171,6 +205,4 @@ fun Canvas.drawStatus(game: Game) {
             "You ${if (game.status == Status.WIN) "win" else "lose"}",
             YELLOW
         )
-//    if (game.status == Status.WIN) playSound("Win.wav")
-//    else if (game.status == Status.LOSE) playSound("Defeat.wav")
 }

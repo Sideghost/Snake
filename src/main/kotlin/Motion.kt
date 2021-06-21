@@ -1,5 +1,4 @@
 
-
 /**
  * Class that defines the displacement between 2 positions.
  * @property dx displacement value on the x axis.
@@ -29,7 +28,6 @@ fun sign(value :Int) = when {
     value > +1 -> -1
     else -> +1
 }
-
 
 
 /**
