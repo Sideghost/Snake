@@ -9,6 +9,8 @@ import pt.isel.canvas.playSound
  */
 fun initApple() = (ALL_POSITIONS - Position(GRID_WIDTH / 2, GRID_HEIGHT / 2) - initBlocks()).random()
 
+fun initAppleTwo() = (ALL_POSITIONS - Position(GRID_WIDTH / 2, GRID_HEIGHT / 2) - initBlockstwo()).random()
+
 /**
  * Function that checks if exists an apple and if its possible to draw it.
  * @receiver Game positions.

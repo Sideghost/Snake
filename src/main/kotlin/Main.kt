@@ -13,7 +13,7 @@ fun main() {
     onStart {
         val cv = Canvas(CELL_SIDE * GRID_WIDTH, CELL_SIDE * GRID_HEIGHT + STATUS_BAR, BLACK)
         var game = Game(Snake(listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2)), Direction.RIGHT, INIT_TO_GROW),
-            initBlocks(), initApple(), INIT_SCORE, Status.RUN)
+            initBlocks(), initApple(), INIT_SCORE, Status.RUN, Leevel(1))
 
         cv.drawGame(game)
         loadSounds("eat.wav")

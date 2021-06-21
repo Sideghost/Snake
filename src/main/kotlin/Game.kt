@@ -1,4 +1,4 @@
-
+import java.util.logging.Level
 
 // Game constants.
 const val CELL_SIDE = 32
@@ -29,22 +29,33 @@ enum class Status { RUN, WIN, LOSE }
  * @property score numbers of apples eaten.
  * @property status current state of the game.
  */
-data class Game(val snake: Snake, val wall: List<Position>, val apple: Position?, val score: Int, val status: Status)
+data class Game(val snake: Snake, val wall: List<Position>, val apple: Position?, val score: Int, val status: Status, val level: Leevel)
+
+data class Leevel(val level: Int)
 
 
 fun Game.isPossible() : Game {
-    val rightPos = snake.body[0] + Direction.RIGHT
-    val upPos = snake.body[0] + Direction.UP
-    val downPos = snake.body[0] + Direction.DOWN
-    val leftPos = snake.body[0] + Direction.LEFT
+    val rightPos = (snake.body[0] + Direction.RIGHT).normalize()
+    val upPos = (snake.body[0] + Direction.UP).normalize()
+    val downPos = (snake.body[0] + Direction.DOWN).normalize()
+    val leftPos = (snake.body[0] + Direction.LEFT).normalize()
     //all unavailable Position
     val impPos = snake.body + wall
     val newStatus = if (rightPos in impPos && upPos in impPos && downPos in impPos && leftPos in impPos) when {
-        snake.body.size > 60 -> Status.WIN
+        snake.body.size >= 60 -> Status.WIN
         else -> Status.LOSE
     }
         else Status.RUN
     return this.copy(status = newStatus)
 
+}
+
+fun gameTwo(g: Game):Game{
+    val list = listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2))
+    val snake = Snake(list, Direction.RIGHT, 5 -1)
+    val apple = initAppleTwo()
+    val status = Status.RUN
+    val level = Leevel(2)
+    return Game(snake, initBlockstwo(), apple, INIT_SCORE, status, level)
 }
 
