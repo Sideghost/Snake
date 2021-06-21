@@ -1,4 +1,4 @@
-import java.util.logging.Level
+import pt.isel.canvas.playSound
 
 // Game constants.
 const val CELL_SIDE = 32
@@ -11,6 +11,7 @@ const val QUART_OF_A_SEC = 250
 const val STATUS_BAR = 40
 const val TEXT_BASE = 10
 const val FONT_SIZE = 25
+
 //const val LEVEL_ONE_WIN = 60
 const val INIT_SIZE = 5
 
@@ -29,12 +30,24 @@ enum class Status { RUN, WIN, LOSE }
  * @property score numbers of apples eaten.
  * @property status current state of the game.
  */
-data class Game(val snake: Snake, val wall: List<Position>, val apple: Position?, val score: Int, val status: Status, val level: Leevel)
+data class Game(
+    val snake: Snake,
+    val wall: List<Position>,
+    val apple: Position?,
+    val score: Int,
+    val status: Status,
+    val level: Leevel,
+    val hacking: Hack
+)
+
+data class Hack(/*val grid:Boolean = false, val Sound:Boolean = false , val help:Boolean = false*/
+    val poison: Position?,
+    val golden: Position?)
 
 data class Leevel(val level: Int)
 
 
-fun Game.isPossible() : Game {
+fun Game.isPossible(): Game {
     val rightPos = (snake.body[0] + Direction.RIGHT).normalize()
     val upPos = (snake.body[0] + Direction.UP).normalize()
     val downPos = (snake.body[0] + Direction.DOWN).normalize()
@@ -45,17 +58,58 @@ fun Game.isPossible() : Game {
         snake.body.size >= 60 -> Status.WIN
         else -> Status.LOSE
     }
-        else Status.RUN
+    else Status.RUN
     return this.copy(status = newStatus)
 
 }
 
-fun gameTwo(g: Game):Game{
-    val list = listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2))
-    val snake = Snake(list, Direction.RIGHT, 5 -1)
+
+fun gameTwo(g: Game): Game {
+    val snake = Snake(listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2)), Direction.RIGHT, INIT_TO_GROW)
     val apple = initAppleTwo()
     val status = Status.RUN
     val level = Leevel(2)
-    return Game(snake, initBlockstwo(), apple, INIT_SCORE, status, level)
+    return Game(snake, initBlocksTwo(), apple, g.score, status, level, Hack(null,null))
+}
+
+
+fun gameThree(g: Game): Game {
+    val snake = Snake(listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2)), Direction.RIGHT, INIT_TO_GROW)
+    val apple = initAppleThree()
+    val status = Status.RUN
+    val level = Leevel(3)
+    return Game(snake, initBlocksThree(), apple, g.score, status, level, Hack(null,null))
+}
+
+
+
+fun nextLv(key: Int, game: Game): Game {
+    return when (key) {
+        'N'.code -> if (game.status == Status.WIN && game.level.level == 1) {
+            playSound("Win.wav")
+            gameTwo(game) }
+        else if (game.status == Status.WIN && game.level.level == 2) {
+            playSound("Win.wav")
+            gameThree(game) }
+        else if (game.status == Status.LOSE){
+            playSound("Defeat.wav")
+            game }
+        else if (game.status == Status.WIN && game.level.level == 3 && game.score >= 64){
+            playSound("Victory.wav")
+            game }
+        else game
+
+        'P'.code -> when (game.level.level) {
+            1 -> {
+                gameTwo(game)
+            }
+            2 -> {
+                gameThree(game)
+            }
+            else -> game
+        }
+
+        else -> game
+    }
 }
 

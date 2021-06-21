@@ -1,5 +1,3 @@
-
-
 /**
  * Class that defines all the important proprieties of a Snake.
  * @property body List of positions(x,y) of the Snake.
@@ -20,6 +18,11 @@ fun move(key: Int, game: Game): Game {
     val newSnake =
         if (game.snake.body.size < INIT_SIZE || game.snake.toGrow > 0) game.snake.body else game.snake.body.dropLast(1)
     return if (hasCollision(headToPosition[0], game.wall, game.snake.body)) game
-    else game.copy(snake = game.snake.copy(body =headToPosition + newSnake,toGrow =  if (game.snake.toGrow > 0) game.snake.toGrow - 1 else game.snake.toGrow)).appleGetsEaten()
+    else game.copy(
+        snake = game.snake.copy(
+            body = headToPosition + newSnake,
+            toGrow = if (game.snake.toGrow > 0) game.snake.toGrow - 1 else game.snake.toGrow
+        )
+    ).appleGetsEaten().poisonAppleGetsEaten().goldenAppleGetsEaten()
 }
 

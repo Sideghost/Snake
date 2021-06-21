@@ -1,10 +1,5 @@
-
-
 // Import of Canvas and the hex of the colors
-import pt.isel.canvas.Canvas
-import pt.isel.canvas.GREEN
-import pt.isel.canvas.WHITE
-import pt.isel.canvas.YELLOW
+import pt.isel.canvas.*
 
 
 /**
@@ -19,6 +14,8 @@ fun Canvas.drawGame(game: Game) {
     game.wall.forEach { drawBrick(it, "bricks.png") }
     drawApple(game.apple, "snake.png")
     drawStatus(game)
+    drawAppleGolden(game.hacking.golden, "appleGolden.png")
+    drawApplePoison(game.hacking.poison, "applePoison.png")
 }
 
 
@@ -43,6 +40,21 @@ fun Canvas.drawGrid() {
  * @param pngFile input file that has the drawing of the snake.
  */
 fun Canvas.drawSnake(snake: Snake, pngFile: String) {
+
+    // Head
+    drawHead(snake, pngFile)
+
+    //Tail
+    if (snake.body.size > 1)
+        drawTail(snake, pngFile)
+    //Body
+    if (snake.body.size > 2)
+        drawBody(snake, pngFile)
+
+}
+
+
+fun Canvas.drawHead(snake: Snake, pngFile: String) {
     val bx = snake.body[0].x * CELL_SIDE - snake.direction.dx()
     val by = snake.body[0].y * CELL_SIDE - snake.direction.dy()
     val (hxImg, hyImg) = when (snake.direction) {
@@ -51,30 +63,36 @@ fun Canvas.drawSnake(snake: Snake, pngFile: String) {
         Direction.DOWN -> 4 to 1
         Direction.UP -> 3 to 0
     }
-    // Head
-    drawImage("$pngFile|${hxImg * SPRITE_DIV},${hyImg * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV", bx, by, CELL_SIDE, CELL_SIDE)
-    //Tail
-    if (snake.body.size > 1) {
-        val position = if (snake.body.size > 1) snake.body[snake.body.size - 2] else snake.body.last()
-        val next = (snake.body.last() - position).toDirection()
+    drawImage(
+        "$pngFile|${hxImg * SPRITE_DIV},${hyImg * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV",
+        bx,
+        by,
+        CELL_SIDE,
+        CELL_SIDE
+    )
+}
 
-        val (txImg, tyImg) = when (next) {
-            Direction.UP -> 4 to 3
-            Direction.DOWN -> 3 to 2
-            Direction.LEFT -> 4 to 2
-            Direction.RIGHT -> 3 to 3
-        }
-        drawImage(
-            "$pngFile|${txImg * SPRITE_DIV},${tyImg * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV",
-            snake.body.last().x * CELL_SIDE,
-            snake.body.last().y * CELL_SIDE,
-            CELL_SIDE,
-            CELL_SIDE
-        )
+
+fun Canvas.drawTail(snake: Snake, pngFile: String) {
+    val position = if (snake.body.size > 1) snake.body[snake.body.size - 2] else snake.body.last()
+    val next = (snake.body.last() - position).toDirection()
+
+    val (txImg, tyImg) = when (next) {
+        Direction.UP -> 4 to 3
+        Direction.DOWN -> 3 to 2
+        Direction.LEFT -> 4 to 2
+        Direction.RIGHT -> 3 to 3
     }
-    //Body
-    if (snake.body.size > 2)
-        for (idx in 1 until snake.body.size - 1) {
+    drawImage(
+        "$pngFile|${txImg * SPRITE_DIV},${tyImg * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV",
+        snake.body.last().x * CELL_SIDE, snake.body.last().y * CELL_SIDE, CELL_SIDE, CELL_SIDE
+    )
+}
+
+
+fun Canvas.drawBody(snake: Snake, pngFile: String) {
+    snake.body.forEachIndexed { idx, _ ->
+        if (idx != 0 && idx != snake.body.size - 1) {
             val next = (snake.body[idx] - snake.body[idx - 1]).toDirection()
             val previous = (snake.body[idx + 1] - snake.body[idx]).toDirection()
             val (bxImg, byImg) = when {
@@ -88,14 +106,11 @@ fun Canvas.drawSnake(snake: Snake, pngFile: String) {
             }
             drawImage(
                 "$pngFile|${bxImg * SPRITE_DIV},${byImg * SPRITE_DIV},$SPRITE_DIV,$SPRITE_DIV",
-                snake.body[idx].x * CELL_SIDE,
-                snake.body[idx].y * CELL_SIDE,
-                CELL_SIDE,
-                CELL_SIDE
+                snake.body[idx].x * CELL_SIDE, snake.body[idx].y * CELL_SIDE, CELL_SIDE, CELL_SIDE
             )
         }
+    }
 }
-
 
 /**
  * Function that draws a brick from the pngFile.
@@ -125,6 +140,17 @@ fun Canvas.drawApple(position: Position?, pngFile: String) {
 }
 
 
+fun Canvas.drawApplePoison(position: Position?, pngFile: String) {
+    if (position != null)
+        drawImage(pngFile, position.x * CELL_SIDE, position.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
+}
+
+fun Canvas.drawAppleGolden(position: Position?, pngFile: String) {
+    if (position != null)
+        drawImage(pngFile, position.x * CELL_SIDE, position.y * CELL_SIDE, CELL_SIDE, CELL_SIDE)
+}
+
+
 /**
  * Displays game information in status bar.
  * @receiver where it will be drawn.
@@ -145,4 +171,6 @@ fun Canvas.drawStatus(game: Game) {
             "You ${if (game.status == Status.WIN) "win" else "lose"}",
             YELLOW
         )
+//    if (game.status == Status.WIN) playSound("Win.wav")
+//    else if (game.status == Status.LOSE) playSound("Defeat.wav")
 }
