@@ -21,7 +21,7 @@ operator fun Position.minus(position:Position) = Motion(x - position.x,y - posit
  * @param value number to check.
  * @return the sign of that number.
  */
-fun sign(value :Int) = when {
+private fun sign(value :Int) = when {
     value == 0 -> 0
     value == -1 -> -1
     value < -1 -> +1

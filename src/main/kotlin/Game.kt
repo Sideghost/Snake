@@ -1,25 +1,40 @@
+// Import that allows to make sounds during the game.
 import pt.isel.canvas.playSound
 
-// Game constants.
-const val CELL_SIDE = 32
-const val FIVE_CELLS = CELL_SIDE * 5
-const val GRID_WIDTH = 20
-const val GRID_HEIGHT = 16
-const val SPRITE_DIV = 64
-const val BLOCK_SPAWN_TIMER = 5000
-const val QUART_OF_A_SEC = 250
-const val STATUS_BAR = 40
-const val TEXT_BASE = 10
-const val FONT_SIZE = 25
-const val Level_WIN = 60
-const val INIT_SIZE = 5
 
+// Game Grid Features.
+const val CELL_SIDE = 32    // Pixel dimension of each grid square.
+const val GRID_WIDTH = 20   // Number of cells horizontally.
+const val GRID_HEIGHT = 16  // Number of cells vertically.
+const val SPRITE_DIV = 64   // Sprite Division on the Sprite file "snake.png".
+
+
+//Status Bar Features
+const val STATUS_BAR = 40               // Status bar height.
+const val FIVE_CELLS = CELL_SIDE * 5    //Score text origin on Status and status lose or lose origin .
+const val TEXT_BASE = 10                // Origin Point of the text on
+const val FONT_SIZE = 25                // Font size on Status Bar
+
+
+//Spawn Rate and Snake Velocity.
+const val BLOCK_SPAWN_TIMER = 5000  // Spawn Block Rate.
+const val QUART_OF_A_SEC = 250      // Velocity of the snake on each movement.
+
+
+// Hacking Features
+const val Level_WIN = 60    // Level score to Win.
+const val INIT_SIZE = 5     // Initial max size of the snake.
+private const val LEVEL_ONE = 1     // Level 1.
+const val LEVEL_TWO = 2     // Level 2.
+const val LEVEL_THREE = 3   // level 3.
+private const val EASTER_EGG = 64   // Easter egg.
 
 /**
  * The three possible game states.
  */
 enum class Status { RUN, WIN, LOSE }
 
+//TODO("perguntar se posso por publico no git por causa do canvas")
 
 /**
  * Class that defines the whole game.
@@ -28,7 +43,6 @@ enum class Status { RUN, WIN, LOSE }
  * @property apple fruit that makes [snake] grow bigger.
  * @property score numbers of apples eaten.
  * @property status current state of the game.
- * @property hacking a few additional variables to the game
  */
 data class Game(
     val snake: Snake,
@@ -39,21 +53,24 @@ data class Game(
     val hacking: Hack
 )
 
+
 /**
  * Class that defines a few variables to the game.
- * @property poison spetial apple present in lv.3.
- * @property golden spetial apple present in lv.2.
+ * @property poison special apple present in lv.3.
+ * @property golden special apple present in lv.2.
  * @property grid game grid.
  * @property sound sounds made by the game.
  * @property level current game level.
  */
 data class Hack(
-    val poison: Position?,
-    val golden: Position?,
-    val grid: Boolean,
-    val sound: Boolean,
-    val level: Int
+    val poison: Position? = null,
+    val golden: Position? = null,
+    val grid: Boolean = false,
+    val sound: Boolean = false,
+    val level: Int = 1 /*IntRange = IntRange(1,3)*/
 )
+/*val level = IntRange('1','3') = LEVEL_ONE*/
+/* val help:Boolean = false*/
 
 
 /**
@@ -74,128 +91,81 @@ fun Game.isPossible(): Game {
     }
     else Status.RUN
     return this.copy(status = newStatus)
-
+//TODO (make this better)
 }
 
 
 /**
- * Function responsible for the construction of lv.2.
+ * Function responsible for the construction of any level.
+ * @param game game to be altered.
+ * @return a new game level.
  */
-fun gameTwo(g: Game): Game {
-    val snake = Snake(listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2)), Direction.RIGHT, INIT_TO_GROW)
-    val apple = initAppleTwo()
-    val status = Status.RUN
-    val level = 2
-    return Game(
-        snake,
-        initBlocksTwo(),
-        apple,
-        g.score,
-        status,
-        Hack(null, null, g.hacking.grid, g.hacking.sound, level)
-    )
-}
-
-
-/**
- * Function responsible for the construction of lv.3.
- */
-fun gameThree(g: Game): Game {
-    val snake = Snake(listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2)), Direction.RIGHT, INIT_TO_GROW)
-    val apple = initAppleThree()
-    val status = Status.RUN
-    val level = 3
-    return Game(
-        snake,
-        initBlocksThree(),
-        apple,
-        g.score,
-        status,
-        Hack(null, null, g.hacking.grid, g.hacking.sound, level)
-    )
+private fun gameLevel(game: Game): Game {
+    val initSnake = Snake(listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2)), Direction.RIGHT, INIT_TO_GROW)
+    return game.copy(snake = initSnake,status= Status.RUN)
 }
 
 
 /**
  * Function responsible for returning the next lv.
  */
-fun nextLv(key: Int, game: Game): Game {
-    return when (key) {
-        'N'.code -> when {
-            game.status == Status.WIN && game.hacking.level == 1 -> {
-                if (game.hacking.sound) playSound("Win.wav")
-                gameTwo(game)
-            }
-            game.status == Status.WIN && game.hacking.level == 2 -> {
-                if (game.hacking.sound) playSound("Win.wav")
-                gameThree(game)
-            }
-            game.status == Status.LOSE -> {
-                if (game.hacking.sound) playSound("Defeat.wav")
-                game
-            }
-            game.status == Status.WIN && game.hacking.level == 3 && game.score >= 64 -> {
-                if (game.hacking.sound) playSound("Victory.wav")
-                game
-            }
-            else -> game
+private fun Game.nextLv(key: Int) = if (key == 'N'.code)
+    when {
+        status == Status.WIN && hacking.level == LEVEL_ONE -> {
+            if (hacking.sound) playSound("Win.wav")
+            gameLevel(copy(apple= initApple(initBlocksTwo()),wall =initBlocksTwo(), hacking= hacking.copy(level= LEVEL_TWO)))
         }
-        else -> game
+
+        status == Status.WIN && hacking.level == LEVEL_TWO -> {
+            if (hacking.sound) playSound("Win.wav")
+            gameLevel(copy(apple= initApple(initBlocksThree()),wall= initBlocksThree(),hacking = hacking.copy(level= LEVEL_THREE)))
+        }
+
+        status == Status.LOSE -> {
+            if (hacking.sound) playSound("Defeat.wav")
+            this
+        }
+
+        status == Status.WIN && hacking.level == LEVEL_THREE && score >= EASTER_EGG -> {
+            if (hacking.sound) playSound("Victory.wav")
+            this
+        }
+
+        else -> this
     }
-}
+else this
 
 
 /**
  * Function that enables the existence of a grid.
  */
-fun grid(g: Game): Game =
-    g.copy(hacking = Hack(g.hacking.poison, g.hacking.golden, true, g.hacking.sound, g.hacking.level))
+private fun grid(game: Game): Game = game.copy(hacking = game.hacking.copy(grid = true))
 
 
 /**
  * Function that enables the existence of sounds.
  */
-fun sound(g: Game): Game =
-    g.copy(hacking = Hack(g.hacking.poison, g.hacking.golden, g.hacking.grid, true, g.hacking.level))
+private fun sound(game: Game): Game = game.copy(hacking = game.hacking.copy(sound = true))
 
 
 /**
  * Function responsible for activating the hacking characteristics of the game.
  */
-fun options(key: Int, game: Game): Game {
-    return when (key) {
-        'G'.code -> when {
-            !game.hacking.grid -> grid(game)
-            else -> game.copy(
-                hacking = Hack(
-                    game.hacking.poison,
-                    game.hacking.golden,
-                    false,
-                    game.hacking.sound,
-                    game.hacking.level
-                )
-            )
-        }
-        'S'.code -> when {
-            !game.hacking.sound -> sound(game)
-            else -> game.copy(
-                hacking = (Hack(
-                    game.hacking.poison,
-                    game.hacking.golden,
-                    game.hacking.grid,
-                    false,
-                    game.hacking.level
-                ))
-            )
-        }
+fun options(key: Int, game: Game) = when (key) {
+        'G'.code -> if (!game.hacking.grid) grid(game)
+        else game.copy(hacking = game.hacking.copy(grid = false))
+
+        'S'.code -> if (!game.hacking.sound) sound(game)
+        else game.copy(hacking = game.hacking.copy(sound = false))
+
         'P'.code -> when (game.hacking.level) {
-            1 -> gameTwo(game)
-            2 -> gameThree(game)
+            1 -> gameLevel(game.copy(apple = initApple(initBlocksTwo()),wall= initBlocksTwo(), hacking = game.hacking.copy(level= LEVEL_TWO)))
+
+            2 -> gameLevel(game.copy(apple = initApple(initBlocksThree()), wall= initBlocksThree(),hacking = game.hacking.copy( level=LEVEL_THREE )))
+
             else -> game
         }
-        'N'.code -> nextLv(key, game)
+        'N'.code -> game.nextLv(key)
         else -> game
     }
-}
-
 

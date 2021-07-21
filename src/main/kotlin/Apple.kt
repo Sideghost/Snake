@@ -2,48 +2,23 @@
 import pt.isel.canvas.playSound
 
 /**
- * Function that chooses randomly an initial apple position for lv.1.
+ * Function that chooses randomly an initial apple position for any level.
  * @return Position of the initial apple.
  */
-fun initApple() = (ALL_POSITIONS - Position(GRID_WIDTH / 2, GRID_HEIGHT / 2) - initBlocks()).random()
+fun initApple(blocks:List<Position>) = (ALL_POSITIONS - Position(GRID_WIDTH / 2, GRID_HEIGHT / 2) - blocks).random()
 
 
 /**
- * Function that chooses randomly an initial apple position for lv.2.
- * @return Position of the initial apple.
- */
-fun initAppleTwo() = (ALL_POSITIONS - Position(GRID_WIDTH / 2, GRID_HEIGHT / 2) - initBlocksTwo()).random()
-
-
-/**
- * Function that chooses randomly an initial apple position for lv.3.
- * @return Position of the initial apple.
- */
-fun initAppleThree() = (ALL_POSITIONS - Position(GRID_WIDTH / 2, GRID_HEIGHT / 2) - initBlocksThree()).random()
-
-
-/**
- * Function that checks if exists a golden apple and if its possible to draw it.
+ * Function that checks if exists a Hacked apple and if its possible to draw it.
  * @receiver Game positions.
+ * @param hackedApple Hacked apple.
+ * @param level current game level.
  * @return a random position when exists any if not returns nothing.
  */
-fun Game.createRandomGoldenApple(h: Hack) = when {
-    (h.golden == null && ALL_POSITIONS.isNotEmpty() && h.level == 2) -> (ALL_POSITIONS - snake.body - wall - apple).random()
-    (h.golden == null && ALL_POSITIONS.isEmpty() && h.level == 2) -> null
-    (h.golden != null && ALL_POSITIONS.isNotEmpty() || h.golden != null && ALL_POSITIONS.isEmpty() && h.level == 2) -> h.golden
-    else -> null
-}
-
-
-/**
- * Function that checks if exists a poisonous apple and if its possible to draw it.
- * @receiver Game positions.
- * @return a random position when exists any if not returns nothing.
- */
-fun Game.createRandomPoisonApple(h: Hack) = when {
-    (h.poison == null && ALL_POSITIONS.isNotEmpty() && h.level == 3) -> (ALL_POSITIONS - snake.body - wall - apple).random()
-    (h.poison == null && ALL_POSITIONS.isEmpty() && h.level == 3) -> null
-    (h.poison != null && ALL_POSITIONS.isNotEmpty() || h.golden != null && ALL_POSITIONS.isEmpty() && h.level == 3) -> h.poison
+fun Game.createRandomHackedApple(hackedApple:Position?, level:Int) = when {
+    hackedApple == null && ALL_POSITIONS.isNotEmpty() && hacking.level == level -> (ALL_POSITIONS - snake.body - wall - apple).random()
+    hackedApple == null && ALL_POSITIONS.isEmpty() && hacking.level == level -> null
+    hackedApple != null && hacking.level == level -> hackedApple
     else -> null
 }
 
@@ -73,38 +48,27 @@ fun Game.appleGetsEaten() =
 
 
 /**
- * Function that verify if a poisonous apple gets eaten and all stats related to that.
+ * Function that verify if a hacked apple gets eaten and all stats related to that.
  * @receiver Game proprieties.
+ * @param sound sound that the game makes if enable when apple gets eaten.
+ * @param hackedApple position of the hacked apple.
+ * @param level current level of the game.
  * @return a new game, if the apple gets eaten makes a characteristic Sound.
  */
-fun Game.poisonAppleGetsEaten() =
-    if (snake.body[0] == hacking.poison) {
-        if (hacking.sound) playSound("poison_eat.wav")
-        if (snake.body.size >= 5)
-            this.copy(
-                snake = this.snake.copy(body = snake.body.dropLast(3)),
-                score = score - 2,
-                hacking = Hack(null, hacking.golden, hacking.grid, hacking.sound, hacking.level)
-            )
-        else this.copy(
-            score = score - 2,
-            hacking = Hack(null, hacking.golden, hacking.grid, hacking.sound, hacking.level)
-        )
+fun Game.hackedAppleGetsEaten(sound:String, hackedApple: Position?, level:Int) =
+    if (snake.body[0] == hackedApple) {
+        if (hacking.sound) playSound(sound)
+        when(level){
+            2 -> this.copy(snake = this.snake.copy(toGrow = snake.toGrow + 10), score = score + 2,
+                hacking = Hack(hacking.poison, null, hacking.grid, hacking.sound, hacking.level))
 
-    } else this
+            3 -> if (snake.body.size >= 5)
+                this.copy(snake = this.snake.copy(body = snake.body.dropLast(3)), score = score - 2,
+                    hacking = hacking.copy(poison = null))
 
+            else this.copy(score = score - 2, hacking = hacking.copy(poison = null))
 
-/**
- * Function that verify if a golden apple gets eaten and all stats related to that.
- * @receiver Game proprieties.
- * @return a new game, if the apple gets eaten makes a characteristic Sound.
- */
-fun Game.goldenAppleGetsEaten() =
-    if (snake.body[0] == hacking.golden) {
-        if (hacking.sound) playSound("eat.wav")
-        this.copy(
-            snake = this.snake.copy(toGrow = snake.toGrow + 10),
-            score = score + 2,
-            hacking = Hack(hacking.poison, null, hacking.grid, hacking.sound, hacking.level)
-        )
-    } else this
+            else -> this
+        }
+    }
+    else this

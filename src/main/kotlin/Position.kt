@@ -38,10 +38,10 @@ fun Snake.headToPosition(key: Int) = body[0] + directionOf(key, this)
  * @return Normalized position.
  */
 fun Position.normalize() = when {
-    x < 0 -> Position(GRID_WIDTH - 1, y)
-    x > GRID_WIDTH - 1 -> Position(0, y)
-    y < 0 -> Position(x, GRID_HEIGHT - 1)
-    y > GRID_HEIGHT - 1 -> Position(x, 0)
+    x < 0 -> this.copy(x=GRID_WIDTH - 1)
+    x > GRID_WIDTH - 1 -> this.copy(x=0)
+    y < 0 -> this.copy(y= GRID_HEIGHT - 1)
+    y > GRID_HEIGHT - 1 -> this.copy(y= 0)
     else -> this
 }
 
@@ -49,5 +49,3 @@ fun Position.normalize() = when {
 // Verifies all possible position inside of the arena
 val ALL_POSITIONS: List<Position> =
     (0 until GRID_HEIGHT * GRID_WIDTH).map { Position(it % GRID_WIDTH, it / GRID_WIDTH) }
-
-

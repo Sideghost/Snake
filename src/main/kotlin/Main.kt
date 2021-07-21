@@ -10,10 +10,8 @@ const val INIT_TO_GROW = 0
 fun main() {
     onStart {
         val cv = Canvas(CELL_SIDE * GRID_WIDTH, CELL_SIDE * GRID_HEIGHT + STATUS_BAR, BLACK)
-        var game = Game(
-            Snake(listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2)), Direction.RIGHT, INIT_TO_GROW),
-            initBlocks(), initApple(), INIT_SCORE, Status.RUN, Hack(null, null, grid = false, sound = false, 1)
-        )
+        var game = Game(Snake(listOf(Position(GRID_WIDTH / 2, GRID_HEIGHT / 2)), Direction.RIGHT, INIT_TO_GROW),
+            initBlocks(), initApple(initBlocks()), INIT_SCORE, Status.RUN, Hack())
 
         cv.drawGame(game)
         loadSounds("eat.wav", "Win.wav", "Defeat.wav", "poison_eat.wav", "Victory.wav")
@@ -31,19 +29,11 @@ fun main() {
 
         cv.onTimeProgress(QUART_OF_A_SEC) {
             game = move(it.toInt(), game).isPossible()
-            game = game.copy(
-                apple = game.createRandomApple(),
-                hacking = Hack(
-                    game.createRandomPoisonApple(game.hacking),
-                    game.createRandomGoldenApple(game.hacking),
-                    game.hacking.grid,
-                    game.hacking.sound,
-                    game.hacking.level
-                )
-            )
+            game = game.copy(apple = game.createRandomApple(), hacking = game.hacking.copy(
+                poison =game.createRandomHackedApple(game.hacking.poison,LEVEL_THREE),
+                golden =game.createRandomHackedApple(game.hacking.golden,LEVEL_TWO)))
             cv.drawGame(game)
         }
-
     }
     onFinish {
         println("FINALLY DONE!!! MINHA NOSSA...")
