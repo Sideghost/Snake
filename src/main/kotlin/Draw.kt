@@ -20,7 +20,21 @@ fun Canvas.drawGame(game: Game) {
     drawStatus(game)
     drawAppleGolden(game.hacking.golden, "appleGolden.png")
     drawApplePoison(game.hacking.poison, "applePoison.png")
+    if (game.hacking.menu){
+        drawMenus()
+    }
 }
+
+
+private fun Canvas.drawMenus(){
+    drawRect(CELL_SIDE * 3,CELL_SIDE * 4,CELL_SIDE * 14,CELL_SIDE * 8, 404040)
+    drawText(CELL_SIDE * 4 - 10,170,"G - Activate Grid", WHITE,20)
+    drawText(CELL_SIDE * 4 - 10,230,"N - Next Level", WHITE,20)
+    drawText(CELL_SIDE * 4 - 10, 290,"S - Activate Sound", WHITE,20)
+    drawText(CELL_SIDE * 4 - 10,350,"J - Skip Level", WHITE,20)
+    drawImage("logo.png", CELL_SIDE * 11 - 10, 180, 150, 150)
+}
+
 
 
 /**
@@ -185,6 +199,10 @@ private fun Canvas.drawAppleGolden(position: Position?, pngFile: String) {
  * @param game information to be written.
  */
 private fun Canvas.drawStatus(game: Game) {
+    val validArrowPositions = game.snake.arrowPositions()
+    val impPos = game.snake.body + game.wall
+    val a = validArrowPositions.all { it in impPos }
+
     drawRect(0, height - STATUS_BAR, width, STATUS_BAR, 0x333333)
     if (game.snake.body.size < Level_WIN)
         drawText(CELL_SIDE / 2, height - TEXT_BASE, "Size:${(game.snake.body.size)}", WHITE, FONT_SIZE)
@@ -192,7 +210,18 @@ private fun Canvas.drawStatus(game: Game) {
         drawText(CELL_SIDE / 2, height - TEXT_BASE, "Size:${(game.snake.body.size)}", GREEN, FONT_SIZE)
     drawText(FIVE_CELLS, height - TEXT_BASE, "Score:${game.score}", WHITE, FONT_SIZE)
 
-    if (game.status != Status.RUN)
+    if (game.status == Status.WIN)
         drawText(width - FIVE_CELLS, height - TEXT_BASE,
-            "You ${if (game.status == Status.WIN) "win" else "lose"}", YELLOW)
+            "You Win", YELLOW)
+    if (game.status == Status.LOSE)
+        drawText(width - FIVE_CELLS, height - TEXT_BASE,
+            "You Lose", YELLOW)
+    if (game.status == Status.PAUSE) when{
+        (game.snake.body.size >= Level_WIN && a) -> drawText(width - FIVE_CELLS, height - TEXT_BASE,
+            "You Win", YELLOW)
+        (game.snake.body.size <= Level_WIN && a) -> drawText(width - FIVE_CELLS, height - TEXT_BASE,
+            "You Lose", YELLOW)
+        else -> drawText(width - SIX_CELLS, height - TEXT_BASE,
+            "Game Paused", YELLOW)
+    }
 }

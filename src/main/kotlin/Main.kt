@@ -17,7 +17,8 @@ fun main() {
         loadSounds("eat.wav", "Win.wav", "Defeat.wav", "poison_eat.wav", "Victory.wav")
 
         cv.onKeyPressed {
-            game = game.copy(snake = snakeDirection(it.code, game))
+            game = if (!game.hacking.menu) game.copy(snake = snakeDirection(it.code, game))
+            else game
             game = options(it.code, game)
         }
 
@@ -28,7 +29,8 @@ fun main() {
         }
 
         cv.onTimeProgress(QUART_OF_A_SEC) {
-            game = move(it.toInt(), game).isPossible()
+            game = if(game.status == Status.RUN) move(it.toInt(), game).isPossible()
+            else game
             game = game.copy(apple = game.createRandomApple(), hacking = game.hacking.copy(
                 poison =game.createRandomHackedApple(game.hacking.poison,LEVEL_THREE),
                 golden =game.createRandomHackedApple(game.hacking.golden,LEVEL_TWO)))
