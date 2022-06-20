@@ -1,2 +1,3 @@
 # TP03-Snake
- Version 1 of the Snake project
+
+Final version of the snake game as work assigment for PG (programming class)
